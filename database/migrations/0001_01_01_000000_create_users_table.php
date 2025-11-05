@@ -9,14 +9,18 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    // database/migrations/..._create_users_table.php
+    public function up()
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
+            $table->string('first_name');
+            $table->string('last_name');
+            $table->string('university_email')->unique();
             $table->string('password');
+            $table->enum('role',['admin','seller','buyer'])->default('buyer');
+            $table->boolean('is_verified')->default(false);
+            $table->string('store_name')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
