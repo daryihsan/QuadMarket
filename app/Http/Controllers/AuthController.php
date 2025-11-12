@@ -4,12 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\OTPVerification;
 use App\Services\OTPService;
 
 class AuthController extends Controller
 {
+    // --- REGISTRASI ---
     public function showRegister() {
         return view('auth.register');
     }
@@ -29,6 +31,7 @@ class AuthController extends Controller
             'university_email' => $validated['university_email'],
             'password' => Hash::make($validated['password']),
             'role' => 'seller',
+            'is_verified' => false,
         ]);
 
         app(OTPService::class)->generateAndSend($user);
@@ -36,6 +39,7 @@ class AuthController extends Controller
         return redirect()->route('verify.otp', ['email' => $user->university_email]);
     }
 
+    // --- VERIFIKASI OTP ---
     public function showVerifyOtp() {
         return view('auth.verify-otp');
     }
@@ -55,29 +59,53 @@ class AuthController extends Controller
 
         $otp->update(['is_used' => true]);
         $otp->user->update(['is_verified' => true]);
-        auth()->login($otp->user);
+        
+        Auth::login($otp->user);
+
         return redirect()->route('seller.dashboard');
     }
 
+    // --- LOGIN ---
     public function showLogin() {
+        if (Auth::check()) {
+            return redirect()->route('seller.dashboard');
+        }
         return view('auth.login');
     }
 
     public function login(Request $request)
     {
+        // 1. Validasi input
         $credentials = $request->validate([
             'university_email' => 'required|email',
             'password' => 'required'
         ]);
 
-        if (auth()->attempt($credentials)) {
+        // 2. Coba login
+        if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+            
+            // 3. Cek status verifikasi
+            if (!$user->is_verified) {
+                Auth::logout();
+                return redirect()->route('verify.otp', ['email' => $user->university_email])
+                                 ->withErrors(['university_email' => 'Akun belum diverifikasi.']);
+            }
+            
+            // 4. Regenerasi session untuk keamanan
+            $request->session()->regenerate();
             return redirect()->route('seller.dashboard');
         }
-        return back()->withErrors(['university_email' => 'Email atau kata sandi salah.']);
+        
+        return back()->withErrors(['university_email' => 'Email atau kata sandi salah.'])->onlyInput('university_email');
     }
 
-    public function logout() {
-        auth()->logout();
+    // --- LOGOUT ---
+    public function logout(Request $request) {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        
         return redirect()->route('login');
     }
 }
