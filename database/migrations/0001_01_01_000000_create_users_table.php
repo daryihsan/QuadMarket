@@ -9,35 +9,30 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    // database/migrations/..._create_users_table.php
-    public function up()
+    public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('university_email')->unique();
+            $table->string('nama_toko');
+            $table->text('deskripsi')->nullable();
+            $table->string('nama_pic');
+            $table->string('no_hp');
+            $table->string('email_pic')->unique();
+
+            $table->text('alamat_pic');
+            $table->string('rt', 10);
+            $table->string('rw', 10);
+            $table->string('kelurahan');
+            $table->string('kabupaten');
+            $table->string('provinsi');
+
+            $table->string('ktp')->unique();
+            $table->string('foto_pic')->nullable();
+            $table->string('file_ktp')->nullable();
+
             $table->string('password');
-            $table->enum('role',['admin','seller','buyer'])->default('buyer');
-            $table->boolean('is_verified')->default(false);
-            $table->string('store_name')->nullable();
             $table->rememberToken();
             $table->timestamps();
-        });
-
-        Schema::create('password_reset_tokens', function (Blueprint $table) {
-            $table->string('email')->primary();
-            $table->string('token');
-            $table->timestamp('created_at')->nullable();
-        });
-
-        Schema::create('sessions', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->foreignId('user_id')->nullable()->index();
-            $table->string('ip_address', 45)->nullable();
-            $table->text('user_agent')->nullable();
-            $table->longText('payload');
-            $table->integer('last_activity')->index();
         });
     }
 
