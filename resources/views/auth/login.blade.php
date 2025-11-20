@@ -10,8 +10,8 @@
           theme: {
             extend: {
               colors: {
-                'quad-dark-blue': '#0a1d41', // Warna Biru Gelap dari desain
-                'quad-light-blue': '#4c98e1', // Warna Biru Tombol dari desain
+                'quad-dark-blue': '#0a1d41', 
+                'quad-light-blue': '#4c98e1',
               }
             }
           }
@@ -23,11 +23,11 @@
         
         <div class="hidden lg:flex w-1/2 bg-quad-dark-blue p-16 flex-col justify-center items-start text-white">
             
-            <div class="flex items-center mb-16">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 mr-2 text-white">
-                    <path fill-rule="evenodd" d="M11.666 2.666A7.999 7.999 0 0 1 19.666 10.666c0 1.258-.276 2.476-.789 3.585l.182.182a.75.75 0 0 1 1.06 1.06l-3.238 3.238a.75.75 0 0 1-1.06-1.06l.182-.182a7.978 7.978 0 0 1-3.585.789A7.999 7.999 0 0 1 3.666 10.666a7.999 7.999 0 0 1 8-8zM11.666 4.166a6.499 6.499 0 0 0-6.5 6.5c0 1.155.334 2.24.952 3.167l.118.158.158.118a6.51 6.51 0 0 0 3.167.952c1.768 0 3.395-.698 4.63-1.87L14.496 14a.75.75 0 0 1-1.06-1.06l1.325-1.325c-.29-.12-.587-.205-.889-.251l-4.708 4.708a.75.75 0 0 1-1.06-1.06l4.708-4.708c-.046-.302-.131-.599-.251-.889l-1.325 1.325a.75.75 0 0 1-1.06-1.06l1.87-1.87c.725-.632 1.57-1.063 2.502-1.259l-.022-.054a6.5 6.5 0 0 0-4.63-1.87z" clip-rule="evenodd" />
-                </svg>
-                <span class="text-3xl font-semibold">QuadMarket</span>
+            <div class="flex items-center mb-5">
+            <img src="{{ asset('assets/quadmarket-logo.png') }}" 
+                alt="QuadMarket Logo" 
+                class="w-29 h-20 mr-1">
+                <!-- <span class="text-3xl font-semibold">QuadMarket</span> -->
             </div>
             
             <h1 class="text-6xl font-bold mb-6 leading-tight">Selamat Datang Kembali, Penjual</h1>

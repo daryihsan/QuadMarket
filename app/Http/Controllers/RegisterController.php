@@ -29,9 +29,7 @@ class RegisterController extends Controller
         return redirect()->route('register.step2');
     }
 
-    /**
-     * STEP 2 – Menampilkan form alamat
-     */
+    // step 2 form 
     public function showStep2(Request $request)
     {
         if (!$request->session()->has('registration_data')) {
@@ -42,9 +40,7 @@ class RegisterController extends Controller
         return view('auth.register.step2');
     }
 
-    /**
-     * STEP 2 – Memproses data alamat
-     */
+    // proses data
     public function processStep2(Request $request)
     {
         $validated = $request->validate([
@@ -66,9 +62,7 @@ class RegisterController extends Controller
         return redirect()->route('register.step3');
     }
 
-    /**
-     * STEP 3 – Menampilkan form password
-     */
+    // step 3 pass
     public function showStep3(Request $request)
     {
         if (!$request->session()->has('registration_data')) {
@@ -78,9 +72,7 @@ class RegisterController extends Controller
         return view('auth.register.step3');
     }
 
-    /**
-     * STEP 3 – Memproses password & membuat akun
-     */
+    // step 3 proses
     public function processStep3(Request $request)
     {
         $validated = $request->validate([
