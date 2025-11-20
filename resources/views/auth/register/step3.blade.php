@@ -17,6 +17,7 @@
             colors: {
               "primary": "#0f3343",
               "accent": "#00D1C1",
+              "quad-light-blue": "#4c98e1",
               "background-light": "#f6f7f8",
               "background-dark": "#131b1f",
               "text-primary": "#0F1E42",
@@ -43,10 +44,10 @@
 <body class="font-display bg-background-light dark:bg-background-dark text-text-primary dark:text-gray-200">
 <div class="relative flex min-h-screen w-full flex-col group/design-root overflow-x-hidden">
 <div class="layout-container flex h-full grow flex-col">
-<header class="flex justify-center py-6 px-4">
-<a class="flex items-center gap-3" href="#">
-<span class="material-symbols-outlined text-primary text-4xl">store</span>
-<span class="text-2xl font-bold tracking-tight text-primary">Katalog Produk Market Place</span>
+<!-- <header class="flex justify-center py-0 px-4"> -->
+<!-- <a class="flex items-center gap-3" href="#"> -->
+<!-- <span class="material-symbols-outlined text-primary text-4xl">store</span> -->
+<!-- <span class="text-2xl font-bold tracking-tight text-primary">Katalog Produk Market Place</span> -->
 </a>
 </header>
 <main class="flex flex-1 justify-center py-5 px-4">
@@ -137,9 +138,9 @@
 
     <div class="mt-6 flex flex-col gap-4">
         <p class="text-center text-xs text-text-secondary dark:text-gray-400">
-            Dengan menekan tombol Kirim, Anda menyetujui <a class="font-semibold text-accent hover:underline" href="#">Syarat &amp; Ketentuan</a> dan <a class="font-semibold text-accent hover:underline" href="#">Kebijakan Privasi</a> kami.
+            Dengan menekan tombol Kirim, Anda menyetujui <a class="font-semibold text-quad-light-blue hover:underline" href="#">Syarat &amp; Ketentuan</a> dan <a class="font-semibold text-quad-light-blue hover:underline" href="#">Kebijakan Privasi</a> kami.
         </p>
-        <button class="flex items-center justify-center w-full h-14 px-6 py-3.5 bg-accent rounded-lg shadow-lg hover:bg-accent/90 transition-all focus:outline-none focus:ring-4 focus:ring-accent/30" type="submit">
+        <button class="flex items-center justify-center w-full h-14 px-6 py-3.5 bg-blue-600 rounded-lg shadow-lg hover:bg-blue-600/90 transition-all focus:outline-none focus:ring-4 focus:ring-accent/30" type="submit">
             <span class="text-base font-bold text-white">Kirim</span>
         </button>
     </div>

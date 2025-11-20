@@ -151,7 +151,7 @@ tailwind.config = {
     </a>
 
     <button type="submit"
-        class="flex items-center justify-center w-full sm:w-auto rounded-lg bg-accent px-8 py-4 text-base font-bold text-primary shadow-sm shadow-accent/20 hover:bg-accent/90">
+        class="flex items-center justify-center w-full sm:w-auto rounded-lg bg-primary px-8 py-4 text-base font-bold text-background-light shadow-sm shadow-accent/20 hover:bg-primary/90">
         Lanjutkan
         <span class="material-symbols-outlined ml-2 text-xl">arrow_forward</span>
     </button>

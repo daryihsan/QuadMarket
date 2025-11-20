@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\AuthController;
 
 // regist
 Route::get('/register/step1', [RegisterController::class, 'showStep1'])->name('register.step1');
@@ -18,16 +19,20 @@ Route::get('/login', function () {
     return view('auth.login'); // Asumsi ada view login
 })->name('login');
 
+Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+
+
 // Route Home setelah berhasil masuk
 Route::get('/home', function () {
     return view('home'); // Asumsi ada view home
 })->middleware('auth')->name('home');
+
 Route::middleware('auth')->prefix('seller')->name('seller.')->group(function() {
     Route::get('/dashboard', [SellerDashboardController::class, 'index'])->name('dashboard');
     Route::get('/product/create', [ProductController::class, 'create'])->name('product.create');
     Route::post('/product', [ProductController::class, 'store'])->name('product.store');
 });
 
-Route::get('/home', function () {
-    return view('home');
-});
+// Route::get('/home', function () {
+//     return view('home');
+// });
