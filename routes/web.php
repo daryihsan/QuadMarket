@@ -13,8 +13,6 @@ Route::post('/register/step2', [RegisterController::class, 'processStep2'])->nam
 Route::get('/register/step3', [RegisterController::class, 'showStep3'])->name('register.step3');
 Route::post('/register/step3', [RegisterController::class, 'processStep3'])->name('register.step3.post');
 
-
-
 // Tambahkan route login sebagai referensi
 Route::get('/login', function () {
     return view('auth.login'); // Asumsi ada view login
@@ -24,3 +22,12 @@ Route::get('/login', function () {
 Route::get('/home', function () {
     return view('home'); // Asumsi ada view home
 })->middleware('auth')->name('home');
+Route::middleware('auth')->prefix('seller')->name('seller.')->group(function() {
+    Route::get('/dashboard', [SellerDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/product/create', [ProductController::class, 'create'])->name('product.create');
+    Route::post('/product', [ProductController::class, 'store'])->name('product.store');
+});
+
+Route::get('/home', function () {
+    return view('home');
+});
