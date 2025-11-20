@@ -3,17 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegisterController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Di sini Anda dapat mendaftarkan route web untuk aplikasi Anda.
-| Route ini dimuat oleh RouteServiceProvider dalam sebuah grup yang
-| berisi middleware "web". Sekarang buat sesuatu yang hebat!
-|
-*/
-
+// regist
 Route::get('/register/step1', [RegisterController::class, 'showStep1'])->name('register.step1');
 Route::post('/register/step1', [RegisterController::class, 'processStep1'])->name('register.step1.post');
 

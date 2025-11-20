@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('deskripsi')->nullable();
             $table->string('nama_pic');
             $table->string('no_hp');
-            $table->string('email_pic')->unique();
+            $table->string('email')->unique();
 
             $table->text('alamat_pic');
             $table->string('rt', 10);
@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('kabupaten');
             $table->string('provinsi');
 
-            $table->string('ktp')->unique();
+            $table->string('nik')->unique();
             $table->string('foto_pic')->nullable();
             $table->string('file_ktp')->nullable();
 

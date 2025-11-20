@@ -2,80 +2,119 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
+use App\Models\User;
 
 class RegisterController extends Controller
 {
+    // step 1
     public function showStep1()
     {
-        return view('auth.register-step1');
+        return view('auth.register.step1');
     }
 
+    // step 1 data input
     public function processStep1(Request $request)
     {
-        $request->validate([
-            'nama_toko' => 'required',
-            'deskripsi' => 'required',
-            'nama_pic' => 'required',
-            'no_hp' => 'required',
-            'email' => 'required|email',
+        $validated = $request->validate([
+            'nama_toko'  => 'required|string|max:255',
+            'deskripsi'  => 'nullable|string|max:500',
+            'nama_pic'   => 'required|string|max:255',
+            'hp_pic'     => 'required|string|max:15',
+            'email_pic'  => 'required|email|unique:users,email',
         ]);
 
-        Session::put('register', $request->only('nama_toko', 'deskripsi', 'nama_pic', 'no_hp', 'email'));
+        $request->session()->put('registration_data', $validated);
+
         return redirect()->route('register.step2');
     }
 
-    public function showStep2()
+    /**
+     * STEP 2 – Menampilkan form alamat
+     */
+    public function showStep2(Request $request)
     {
-        return view('auth.register-step2');
+        if (!$request->session()->has('registration_data')) {
+            return redirect()->route('register.step1')
+                             ->with('error', 'Silakan isi langkah 1 terlebih dahulu.');
+        }
+
+        return view('auth.register.step2');
     }
 
+    /**
+     * STEP 2 – Memproses data alamat
+     */
     public function processStep2(Request $request)
     {
-        $request->validate([
-            'alamat' => 'required',
-            'rt' => 'required',
-            'rw' => 'required',
-            'kelurahan' => 'required',
-            'kota' => 'required',
-            'provinsi' => 'required',
+        $validated = $request->validate([
+            'alamat_pic' => 'required|string|max:255',
+            'rt'         => 'required|string|max:10',
+            'rw'         => 'required|string|max:10',
+            'kelurahan'  => 'required|string|max:255',
+            'kabupaten'  => 'required|string|max:255',
+            'provinsi'   => 'required|string|max:255',
         ]);
 
-        $step1 = Session::get('register');
-        $data = array_merge($step1, $request->only('alamat', 'rt', 'rw', 'kelurahan', 'kota', 'provinsi'));
-        Session::put('register', $data);
+        $merged = array_merge(
+            $request->session()->get('registration_data'),
+            $validated
+        );
+
+        $request->session()->put('registration_data', $merged);
 
         return redirect()->route('register.step3');
     }
 
-    public function showStep3()
+    /**
+     * STEP 3 – Menampilkan form password
+     */
+    public function showStep3(Request $request)
     {
-        return view('auth.register-step3');
+        if (!$request->session()->has('registration_data')) {
+            return redirect()->route('register.step1');
+        }
+
+        return view('auth.register.step3');
     }
 
+    /**
+     * STEP 3 – Memproses password & membuat akun
+     */
     public function processStep3(Request $request)
     {
-        $request->validate([
-            'no_ktp' => 'required',
-            'password' => 'required|min:8|confirmed',
-            'foto_pic' => 'nullable|image',
-            'ktp_pic' => 'nullable|image',
+        $validated = $request->validate([
+            'nik'      => 'required|string|max:20',
+            'password' => 'required|min:6|confirmed',
         ]);
 
-        $data = Session::get('register');
+        $merged = array_merge(
+            $request->session()->get('registration_data'),
+            [
+                'nik'      => $validated['nik'],
+                'password' => bcrypt($validated['password']),
+            ]
+        );
 
         User::create([
-            'first_name' => $data['nama_pic'],
-            'last_name' => '',
-            'address' => $data['alamat'],
-            'university_email' => $data['email'],
-            'password' => Hash::make($request->password),
+            'nama_toko'  => $merged['nama_toko'],
+            'deskripsi'  => $merged['deskripsi'],
+            'nama_pic'   => $merged['nama_pic'],
+            'no_hp'      => $merged['hp_pic'],
+            'email'      => $merged['email_pic'],
+            'alamat_pic' => $merged['alamat_pic'],
+            'rt'         => $merged['rt'],
+            'rw'         => $merged['rw'],
+            'kelurahan'  => $merged['kelurahan'],
+            'kabupaten'  => $merged['kabupaten'],
+            'provinsi'   => $merged['provinsi'],
+            'nik'        => $merged['nik'],
+            'password'   => $merged['password'],
         ]);
 
-        Session::forget('register');
-        return redirect('/login')->with('success', 'Registrasi berhasil! Silakan login.');
+        $request->session()->forget('registration_data');
+
+        return redirect()->route('login')
+                        ->with('success', 'Akun berhasil dibuat!');
     }
 }
