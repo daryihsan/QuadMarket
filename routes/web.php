@@ -22,3 +22,7 @@ Route::middleware('auth')->prefix('seller')->name('seller.')->group(function() {
     Route::get('/product/create', [ProductController::class, 'create'])->name('product.create');
     Route::post('/product', [ProductController::class, 'store'])->name('product.store');
 });
+
+Route::get('/home', function () {
+    return view('home');
+});
