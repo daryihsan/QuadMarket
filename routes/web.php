@@ -16,6 +16,9 @@ Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/product/detail', function () {
+    return view('products.detail');
+});
 
 Route::middleware('auth')->prefix('seller')->name('seller.')->group(function() {
     Route::get('/dashboard', [SellerDashboardController::class, 'index'])->name('dashboard');
