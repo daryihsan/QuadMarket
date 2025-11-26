@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SellerDashboardController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\PlatformController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -23,9 +24,10 @@ Route::middleware('auth')->prefix('seller')->name('seller.')->group(function() {
     Route::post('/product', [ProductController::class, 'store'])->name('product.store');
 });
 
-Route::get('/', function () {
-    return redirect()->route('login');
-});
+Route::get('/dashboard', function () {
+        return view('platform.dashboard');
+    })->name('dashboard');
+    
 
 // PLATFORM ADMIN
 Route::prefix('platform')->name('platform.')->group(function () {
@@ -49,4 +51,9 @@ Route::prefix('platform')->name('platform.')->group(function () {
     Route::get('/laporan/produk', function () {
         return view('platform.produk');
     })->name('laporan.produk');
+    // Verifikasi Penjual (SRS-MartPlace-02)
+    Route::get('/verifikasi', [PlatformController::class, 'verificationList'])->name('verifikasi.list');
+    Route::get('/verifikasi/{id}', [PlatformController::class, 'verificationDetail'])->name('verifikasi.detail');
+    // POST Request untuk Aksi Terima/Tolak
+    Route::post('/verifikasi/{id}/process', [PlatformController::class, 'processVerification'])->name('verifikasi.process');
 });

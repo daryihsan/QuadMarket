@@ -3,8 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin Platform</title>
+    <title>Daftar Verifikasi Penjual</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for consistency if needed */
+        .blue-gradient {
+            background-image: linear-gradient(to right, #1E3A8A, #3B82F6);
+        }
+    </style>
 </head>
 <body class="bg-gray-200">
     <div class="flex min-h-screen">
@@ -70,102 +76,51 @@
             </div>
         </aside>
 
-        <!-- Main Content -->
         <main class="flex-1 p-8">
-            <!-- Header -->
             <div class="flex justify-between items-center mb-8">
-                <div>
-                    <h1 class="text-2xl font-bold text-blue-900">Dashboard Platform</h1>
-                    <p class="text-gray-600">Selamat Datang, Admin QuadMarket!</p>
-                </div>
-                <img src="assets/images/logo.png" alt="QuadMarket" class="h-10">
+                <h1 class="text-2xl font-bold text-blue-900">Antrian Verifikasi Penjual</h1>
             </div>
 
-            <!-- Stats Grid -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-                <!-- Lokasi Penjual Card -->
-                <div class="bg-white rounded-lg shadow p-6 lg:col-span-2">
-                    <h2 class="text-lg font-bold text-blue-900 mb-6">Lokasi Penjual</h2>
-                    <div class="flex items-center justify-between">
-                        <!-- Donut Chart -->
-                        <div class="relative">
-                            <svg class="w-48 h-48 transform -rotate-90">
-                                <circle cx="96" cy="96" r="80" stroke="#E5E7EB" stroke-width="32" fill="none" />
-                                <circle cx="96" cy="96" r="80" stroke="#EF4444" stroke-width="32" fill="none" 
-                                    stroke-dasharray="502.65" stroke-dashoffset="167.55" stroke-linecap="round" />
-                            </svg>
-                            <div class="absolute inset-0 flex flex-col items-center justify-center">
-                                <span class="text-4xl font-bold text-gray-800">200</span>
-                                <span class="text-sm text-gray-500">Lokasi</span>
-                            </div>
-                        </div>
-
-                        <!-- Legend -->
-                        <div class="space-y-3">
-                            <div class="flex items-center space-x-3">
-                                <span class="w-3 h-3 bg-blue-500 rounded-full"></span>
-                                <span class="text-gray-700">DKI Jakarta (78%)</span>
-                            </div>
-                            <div class="flex items-center space-x-3">
-                                <span class="w-3 h-3 bg-red-500 rounded-full"></span>
-                                <span class="text-gray-700">Jawa Tengah (17%)</span>
-                            </div>
-                            <div class="flex items-center space-x-3">
-                                <span class="w-3 h-3 bg-gray-300 rounded-full"></span>
-                                <span class="text-gray-700">Lainnya (5%)</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Status Penjual Card -->
-                <div class="bg-white rounded-lg shadow p-6">
-                    <h2 class="text-lg font-bold text-blue-900 mb-6">Status Penjual</h2>
-                    <div class="space-y-4">
-                        <div>
-                            <p class="text-sm text-gray-600 mb-2">Total Penjual Aktif</p>
-                            <p class="text-3xl font-bold text-blue-900">150</p>
-                        </div>
-                        <div>
-                            <p class="text-sm text-gray-600 mb-2">Total Penjual Tidak Aktif</p>
-                            <p class="text-3xl font-bold text-blue-900">50</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Second Row Stats -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-                <div class="bg-white rounded-lg shadow p-6">
-                    <p class="text-sm text-gray-600 mb-2">Total Pembeli</p>
-                    <p class="text-3xl font-bold text-blue-900">5,123</p>
-                </div>
-                <div class="bg-white rounded-lg shadow p-6">
-                    <p class="text-sm text-gray-600 mb-2">Total Penjual Baru</p>
-                    <p class="text-3xl font-bold text-blue-900">+5</p>
-                </div>
-                <div class="bg-white rounded-lg shadow p-6">
-                    <p class="text-sm text-gray-600 mb-2">Total Produk</p>
-                    <p class="text-3xl font-bold text-blue-900">5,123</p>
-                </div>
-                <div class="bg-white rounded-lg shadow p-6">
-                    <p class="text-sm text-gray-600 mb-2">Total Transaksi</p>
-                    <p class="text-3xl font-bold text-blue-900">4,123</p>
-                </div>
-            </div>
-
-            <!-- Revenue Section -->
             <div class="bg-white rounded-lg shadow p-6">
-                <h2 class="text-lg font-bold text-blue-900 mb-6">Omzet Platform</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <p class="text-sm text-gray-600 mb-2">Total Omzet</p>
-                        <p class="text-3xl font-bold text-blue-900">Rp2,123,456,789</p>
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Penjual Menunggu Verifikasi </h2>
+                
+                @if(session('success'))
+                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+                        <span class="block sm:inline">{{ session('success') }}</span>
                     </div>
-                    <div>
-                        <p class="text-sm text-gray-600 mb-2">Rata-Rata Omzet (per tahun)</p>
-                        <p class="text-3xl font-bold text-blue-900">Rp175,000,000</p>
-                    </div>
+                @endif
+
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Toko </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">PIC </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email PIC </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lokasi Propinsi </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            @forelse ($pending_sellers as $seller)
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $seller->id }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $seller->nama_toko }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $seller->nama_pic }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $seller->email_pic }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $seller->propinsi }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <a href="{{ route('platform.verifikasi.detail', $seller->id) }}" class="text-indigo-600 hover:text-indigo-900">Lihat Detail</a>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">Tidak ada penjual yang menunggu verifikasi saat ini.</td>
+                            </tr>
+                            @endforelse
+                            </tbody>
+                    </table>
                 </div>
             </div>
         </main>
