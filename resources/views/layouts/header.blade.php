@@ -23,12 +23,5 @@
 				</button>
 			</div>
 		</div>
-
-		<div class="flex items-center">
-			<button class="bg-blue-600 text-white font-medium py-2 px-4 rounded-lg flex items-center hover:bg-blue-700 transition duration-150 text-sm">
-				<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-				Masuk
-			</button>
-		</div>
 	</nav>
 </header>
