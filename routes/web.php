@@ -46,6 +46,9 @@ Route::middleware('auth')->prefix('seller')->name('seller.')->group(function() {
     // Route::post('/product', [ProductController::class, 'store'])->name('product.store');
 });
 
+Route::get('/product/detail/ulasan', function () {
+    return view('ulasan');
+});
 // Route::get('/home', function () {
 //     return view('home');
 // });
