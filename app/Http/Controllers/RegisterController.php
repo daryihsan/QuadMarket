@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Validation\Rule;
 
 class RegisterController extends Controller
 {
@@ -20,7 +23,7 @@ class RegisterController extends Controller
             'nama_toko'  => 'required|string|max:255',
             'deskripsi'  => 'nullable|string|max:500',
             'nama_pic'   => 'required|string|max:255',
-            'hp_pic'     => 'required|string|max:15',
+            'hp_pic'     => 'required|string|max:15', 
             'email_pic'  => 'required|email|unique:users,email',
         ]);
 
@@ -72,41 +75,85 @@ class RegisterController extends Controller
         return view('auth.register.step3');
     }
 
-    // step 3 proses
+    // step 3 proses & register
     public function processStep3(Request $request)
     {
+        if (!$request->session()->has('registration_data')) {
+            return redirect()->route('register.step1')
+                             ->with('error', 'Sesi pendaftaran hilang. Silakan mulai kembali.');
+        }
+
         $validated = $request->validate([
-            'nik'      => 'required|string|max:20',
-            'password' => 'required|min:6|confirmed',
+            // NIK harus 16 digit dan unik di database user
+            'nik'          => ['required', 'string', 'digits:16', Rule::unique('users', 'nik')], 
+            'password'     => 'required|min:8|confirmed',
+            // Validasi untuk file: gambar, maks 5MB
+            'foto_pic'     => 'required|image|max:5120', 
+            'foto_ktp'     => 'required|image|max:5120',
+        ], [
+            'nik.digits' => 'Nomor KTP harus terdiri dari 16 digit.',
+            'nik.unique' => 'Nomor KTP ini sudah terdaftar.',
+            'password.min' => 'Kata sandi minimal 8 karakter.',
+            'foto_pic.required' => 'Foto PIC wajib diunggah.',
+            'foto_ktp.required' => 'File KTP PIC wajib diunggah.',
+            'foto_pic.image' => 'File Foto PIC harus berupa gambar.',
+            'foto_ktp.image' => 'File KTP PIC harus berupa gambar.',
+            'foto_pic.max' => 'Ukuran file Foto PIC maksimal 5MB.',
+            'foto_ktp.max' => 'Ukuran file KTP PIC maksimal 5MB.',
         ]);
 
-        $merged = array_merge(
-            $request->session()->get('registration_data'),
+        $registrationData = $request->session()->get('registration_data');
+
+        // 1. Upload File
+        // Catatan: Pastikan Anda telah mengkonfigurasi storage dan menjalankan php artisan storage:link
+        $fotoPicPath = $request->file('foto_pic')->store('public/seller_docs/foto_pic');
+        $fotoKtpPath = $request->file('foto_ktp')->store('public/seller_docs/foto_ktp');
+        
+        // 2. Gabungkan data
+        $finalData = array_merge(
+            $registrationData,
             [
-                'nik'      => $validated['nik'],
-                'password' => bcrypt($validated['password']),
+                'nik'          => $validated['nik'],
+                'password'     => bcrypt($validated['password']),
+                'foto_pic_url' => Storage::url($fotoPicPath),
+                'foto_ktp_url' => Storage::url($fotoKtpPath),
+                'role'         => 'seller', // Tambahkan role jika diperlukan
+                'is_verified'  => false,    // Set status belum diverifikasi
             ]
         );
 
+        // 3. Simpan ke database
+        // Catatan: Pastikan model User Anda memiliki semua field ini di $fillable
         User::create([
-            'nama_toko'  => $merged['nama_toko'],
-            'deskripsi'  => $merged['deskripsi'],
-            'nama_pic'   => $merged['nama_pic'],
-            'no_hp'      => $merged['hp_pic'],
-            'email'      => $merged['email_pic'],
-            'alamat_pic' => $merged['alamat_pic'],
-            'rt'         => $merged['rt'],
-            'rw'         => $merged['rw'],
-            'kelurahan'  => $merged['kelurahan'],
-            'kabupaten'  => $merged['kabupaten'],
-            'provinsi'   => $merged['provinsi'],
-            'nik'        => $merged['nik'],
-            'password'   => $merged['password'],
+            'nama_toko'  => $finalData['nama_toko'],
+            'deskripsi'  => $finalData['deskripsi'] ?? null,
+            'nama_pic'   => $finalData['nama_pic'],
+            'no_hp'      => $finalData['hp_pic'],
+            'email'      => $finalData['email_pic'],
+            'alamat_pic' => $finalData['alamat_pic'],
+            'rt'         => $finalData['rt'],
+            'rw'         => $finalData['rw'],
+            'kelurahan'  => $finalData['kelurahan'],
+            'kabupaten'  => $finalData['kabupaten'],
+            'provinsi'   => $finalData['provinsi'],
+            'nik'        => $finalData['nik'],
+            'password'   => $finalData['password'],
+            'foto_pic_url' => $finalData['foto_pic_url'],
+            'foto_ktp_url' => $finalData['foto_ktp_url'],
+            'role'       => $finalData['role'],
+            'is_verified' => $finalData['is_verified'],
         ]);
 
+        // 4. Bersihkan session
         $request->session()->forget('registration_data');
-
-        return redirect()->route('login')
-                        ->with('success', 'Akun berhasil dibuat!');
+        
+        // 5. Arahkan ke halaman sukses
+        return redirect()->route('register.success'); 
+    }
+    
+    // Fungsi baru untuk menampilkan halaman sukses
+    public function showSuccess()
+    {
+        return view('auth.register.success');
     }
 }

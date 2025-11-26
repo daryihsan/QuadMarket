@@ -13,6 +13,8 @@ Route::post('/register/step2', [RegisterController::class, 'processStep2'])->nam
 
 Route::get('/register/step3', [RegisterController::class, 'showStep3'])->name('register.step3');
 Route::post('/register/step3', [RegisterController::class, 'processStep3'])->name('register.step3.post');
+// Rute baru untuk halaman sukses
+Route::get('/register/success', [RegisterController::class, 'showSuccess'])->name('register.success');
 
 // Tambahkan route login sebagai referensi
 Route::get('/login', function () {
