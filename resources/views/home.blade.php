@@ -10,12 +10,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     
     <style>
-        /* Menggunakan font Inter */
         html, body {
             font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
         }
-        
-        /* Efek Hover untuk Kartu */
         .category-card, .product-card {
             transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
             cursor: pointer;
@@ -25,11 +22,11 @@
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Bayangan yang lebih jelas */
         }
 
-        /* Styling Hero Section */
+        /* Styling Hero Section untuk Latar Belakang */
         .hero-section {
-            min-height: 400px; 
-            background-color: #e6f1f8; 
-            /* Ganti path gambar sesuai kebutuhan Anda */
+            min-height: 400px; /* Menyesuaikan tinggi dengan desain */
+            background-color: #e6f1f8; /* Warna latar belakang umum */
+            /* GANTI path gambar hero-bg.png dengan path gambar produk background Anda */
             background-image: url('assets/images/hero.png'); 
             background-size: cover;
             background-position: center;
@@ -46,15 +43,7 @@
 </head>
 <body class="bg-gray-50">
 
-    <header class="bg-white shadow-md">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-            <div class="text-2xl font-black text-blue-600">QuadMarket</div>
-            <nav class="space-x-4">
-                <a href="#" class="text-gray-600 hover:text-blue-600">Masuk</a>
-                <a href="#" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">Daftar</a>
-            </nav>
-        </div>
-    </header>
+    @include('layouts.header')
 
     <section class="hero-section text-center pt-20 pb-28 flex flex-col items-center justify-center">
         <div class="max-w-7xl mx-auto px-4">
@@ -119,11 +108,11 @@
                 <img src="assets/images/headphone.png" alt="Headphone Gaming" class="w-full h-40 object-cover">
                 <div class="p-4">
                     <p class="text-sm font-medium text-gray-800 truncate mb-1">Headphone Gaming</p>
-                    <div class="flex items-center text-xs mb-2"> 
+                    <div class="flex items-center mb-2 text-xs">
                         <span class="font-semibold text-yellow-500 mr-1">⭐ 4.7</span>
                         <span class="text-gray-500">(92)</span>
                     </div>
-                    <p class="text-lg font-bold text-gray-900 mb-1">230.000</p>
+                    <p class="text-lg font-bold text-gray-900">230.000</p>
                     <div class="text-right">
                         <span class="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">📍 Jakarta</span>
                     </div>
@@ -134,11 +123,11 @@
                 <img src="assets/images/kursi.png" alt="Kursi Kayu Modern" class="w-full h-40 object-cover">
                 <div class="p-4">
                     <p class="text-sm font-medium text-gray-800 truncate mb-1">Kursi Kayu Modern</p>
-                    <div class="flex items-center text-xs mb-2">
+                    <div class="flex items-center mb-2 text-xs">
                         <span class="font-semibold text-yellow-500 mr-1">⭐ 4.2</span>
                         <span class="text-gray-500">(180)</span>
                     </div>
-                    <p class="text-lg font-bold text-gray-900 mb-1">300.000</p>
+                    <p class="text-lg font-bold text-gray-900">300.000</p>
                     <div class="text-right">
                         <span class="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">📍 Bandung</span>
                     </div>
@@ -149,13 +138,13 @@
                 <img src="assets/images/facemist.png" alt="Face Mist Laneige" class="w-full h-40 object-cover">
                 <div class="p-4">
                     <p class="text-sm font-medium text-gray-800 truncate mb-1">Face Mist Laneige</p>
-                    <div class="flex items-center text-xs mb-2">
+                    <div class="flex items-center mb-2 text-xs">
                         <span class="font-semibold text-yellow-500 mr-1">⭐ 4.9</span>
                         <span class="text-gray-500">(296)</span>
                     </div>
-                    <p class="text-lg font-bold text-gray-900 mb-1">286.000</p>
+                    <p class="text-lg font-bold text-gray-900">286.000</p>
                     <div class="text-right">
-                        <span class="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">📍 Surabaya</span>
+                        <span class="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">📍 Semarang</span>
                     </div>
                 </div>
             </a>
@@ -164,13 +153,13 @@
                 <img src="assets/images/alpro.png" alt="Buku Algoritma" class="w-full h-40 object-cover">
                 <div class="p-4">
                     <p class="text-sm font-medium text-gray-800 truncate mb-1">Buku Algoritma</p>
-                    <div class="flex items-center text-xs mb-2">
+                    <div class="flex items-center mb-2 text-xs">
                         <span class="font-semibold text-yellow-500 mr-1">⭐ 4.5</span>
                         <span class="text-gray-500">(60)</span>
                     </div>
-                    <p class="text-lg font-bold text-gray-900 mb-1">66.000</p>
+                    <p class="text-lg font-bold text-gray-900">66.000</p>
                     <div class="text-right">
-                        <span class="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">📍 Yogyakarta</span>
+                        <span class="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">📍 Jakarta</span>
                     </div>
                 </div>
             </a>
@@ -179,24 +168,20 @@
                 <img src="assets/images/kemeja.png" alt="Kemeja Wanita" class="w-full h-40 object-cover">
                 <div class="p-4">
                     <p class="text-sm font-medium text-gray-800 truncate mb-1">Kemeja Wanita</p>
-                    <div class="flex items-center text-xs mb-2">
+                    <div class="flex items-center mb-2 text-xs">
                         <span class="font-semibold text-yellow-500 mr-1">⭐ 5.0</span>
                         <span class="text-gray-500">(220)</span>
                     </div>
-                    <p class="text-lg font-bold text-gray-900 mb-1">230.000</p>
+                    <p class="text-lg font-bold text-gray-900">230.000</p>
                     <div class="text-right">
-                        <span class="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">📍 Medan</span>
+                        <span class="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">📍 Surabaya</span>
                     </div>
                 </div>
             </a>
         </div>
     </section>
 
-    <footer class="bg-gray-800 text-white mt-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
-            <p>&copy; 2025 QuadMarket. Hak Cipta Dilindungi.</p>
-        </div>
-    </footer>
+    @include('layouts.footer')
 
 </body>
 </html>
