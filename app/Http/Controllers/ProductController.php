@@ -16,17 +16,24 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'name'=>'required',
-            'description'=>'nullable',
-            'price'=>'required|numeric|min:0',
-            'stock'=>'required|integer|min:1',
-            'category_id'=>'nullable|exists:categories,id'
+        $validated = $request->validate([
+            'name' => 'required',
+            'description' => 'nullable',
+            'price' => 'required|integer',
+            'category' => 'required',
+            'location' => 'required',
+            'store_name' => 'required',
+            'rating' => 'required|numeric',
+            'reviews_count' => 'required|integer',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        $data['user_id'] = auth()->id();
-        Product::create($data);
+        if ($request->hasFile('image')) {
+            $validated['image'] = $request->file('image')->store('products', 'public');
+        }
 
-        return redirect()->route('seller.dashboard')->with('success','Produk berhasil ditambahkan!');
+        Product::create($validated);
+
+        return redirect()->back()->with('success', 'Produk berhasil ditambahkan!');
     }
 }

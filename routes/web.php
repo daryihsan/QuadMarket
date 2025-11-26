@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CatalogController;
+
 Route::get('/', action: function () {
     return view('home');
 });
@@ -48,6 +50,5 @@ Route::middleware('auth')->prefix('seller')->name('seller.')->group(function() {
     // Route::post('/product', [ProductController::class, 'store'])->name('product.store');
 });
 
-// Route::get('/home', function () {
-//     return view('home');
-// });
+// katalog produk
+Route::get('/katalog', [CatalogController::class, 'index'])->name('katalog');

@@ -9,21 +9,19 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('category_id')->nullable()->constrained()->nullOnDelete();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->decimal('price',12,2);
-            $table->integer('stock');
-            $table->integer('min_order')->default(1);
-            $table->boolean('is_dangerous')->default(false);
-            $table->boolean('is_preorder')->default(false);
-            $table->decimal('shipping_cost',12,2)->default(0);
-            $table->string('status')->default('pending');
+            $table->unsignedBigInteger('price');
+            $table->string('category');
+            $table->string('location');
+            $table->string('store_name');
+            $table->decimal('rating', 2, 1); // Contoh: 4.9
+            $table->integer('reviews_count'); // Jumlah ulasan
+            $table->string('image')->nullable(); // URL gambar produk
             $table->timestamps();
         });
     }
