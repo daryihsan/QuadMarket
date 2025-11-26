@@ -4,6 +4,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\AuthController;
 
+Route::get('/', function () {
+    return view('home');
+});
+
 // regist
 Route::get('/register/step1', [RegisterController::class, 'showStep1'])->name('register.step1');
 Route::post('/register/step1', [RegisterController::class, 'processStep1'])->name('register.step1.post');
