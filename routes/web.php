@@ -22,3 +22,31 @@ Route::middleware('auth')->prefix('seller')->name('seller.')->group(function() {
     Route::get('/product/create', [ProductController::class, 'create'])->name('product.create');
     Route::post('/product', [ProductController::class, 'store'])->name('product.store');
 });
+
+Route::get('/', function () {
+    return redirect()->route('login');
+});
+
+// PLATFORM ADMIN
+Route::prefix('platform')->name('platform.')->group(function () {
+
+    // Dashboard platform
+    Route::get('/dashboard', function () {
+        return view('platform.dashboard');
+    })->name('dashboard');
+
+    // Laporan index
+    Route::get('/laporan', function () {
+        return view('platform.laporan');
+    })->name('laporan');
+
+    // Laporan provinsi
+    Route::get('/laporan/provinsi', function () {
+        return view('platform.provinsi');
+    })->name('laporan.provinsi');
+
+    // Laporan produk
+    Route::get('/laporan/produk', function () {
+        return view('platform.produk');
+    })->name('laporan.produk');
+});
