@@ -51,9 +51,13 @@ Route::prefix('platform')->name('platform.')->group(function () {
     Route::get('/laporan/produk', function () {
         return view('platform.produk');
     })->name('laporan.produk');
+<<<<<<< HEAD
     // Verifikasi Penjual (SRS-MartPlace-02)
     Route::get('/verifikasi', [PlatformController::class, 'verificationList'])->name('verifikasi.list');
     Route::get('/verifikasi/{id}', [PlatformController::class, 'verificationDetail'])->name('verifikasi.detail');
     // POST Request untuk Aksi Terima/Tolak
     Route::post('/verifikasi/{id}/process', [PlatformController::class, 'processVerification'])->name('verifikasi.process');
 });
+=======
+});
+>>>>>>> 4febb3c7a5839559b4f434759998503815f26a62
