@@ -56,12 +56,7 @@
                     </svg>
                     <span>Bantuan</span>
                 </a>
-                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                    </svg>
-                    <span>Keluar</span>
-                </a>
+                
             </div>
         </aside>
 
@@ -149,20 +144,6 @@
                 </div>
             </div>
 
-            <!-- Revenue Section -->
-            <div class="bg-white rounded-lg shadow p-6">
-                <h2 class="text-lg font-bold text-blue-900 mb-6">Omzet Platform</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <p class="text-sm text-gray-600 mb-2">Total Omzet</p>
-                        <p class="text-3xl font-bold text-blue-900">Rp2,123,456,789</p>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-600 mb-2">Rata-Rata Omzet (per tahun)</p>
-                        <p class="text-3xl font-bold text-blue-900">Rp175,000,000</p>
-                    </div>
-                </div>
-            </div>
         </main>
     </div>
 </body>
