@@ -27,8 +27,14 @@ return new class extends Migration
             $table->string('provinsi');
 
             $table->string('nik')->unique();
-            $table->string('foto_pic')->nullable();
-            $table->string('file_ktp')->nullable();
+            $table->string('foto_pic')->nullable(); // Diubah ke 'foto_pic' (tanpa _url)
+            $table->string('file_ktp')->nullable(); // Diubah ke 'file_ktp' (tanpa _url)
+            
+            // Kolom Verifikasi dan Status Akun
+            $table->string('activation_token')->nullable(); 
+            $table->timestamp('email_verified_at')->nullable();
+            $table->enum('status_akun', ['pending', 'active', 'rejected'])->default('pending');
+            $table->dateTime('verification_date')->nullable();
 
             $table->string('password');
             $table->rememberToken();

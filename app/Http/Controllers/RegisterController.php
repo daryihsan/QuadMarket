@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Str; // Tambahkan untuk membuat token
 
 class RegisterController extends Controller
 {
@@ -27,7 +28,16 @@ class RegisterController extends Controller
             'email_pic'  => 'required|email|unique:users,email',
         ]);
 
-        $request->session()->put('registration_data', $validated);
+        // Ganti 'hp_pic' dan 'email_pic' agar match dengan kolom di DB (no_hp dan email)
+        $registrationData = [
+            'nama_toko'  => $validated['nama_toko'],
+            'deskripsi'  => $validated['deskripsi'],
+            'nama_pic'   => $validated['nama_pic'],
+            'no_hp'      => $validated['hp_pic'], // no_hp di DB
+            'email'      => $validated['email_pic'], // email di DB
+        ];
+
+        $request->session()->put('registration_data', $registrationData);
 
         return redirect()->route('register.step2');
     }
@@ -84,69 +94,65 @@ class RegisterController extends Controller
         }
 
         $validated = $request->validate([
-            // NIK harus 16 digit dan unik di database user
             'nik'          => ['required', 'string', 'digits:16', Rule::unique('users', 'nik')], 
             'password'     => 'required|min:8|confirmed',
-            // Validasi untuk file: gambar, maks 5MB
             'foto_pic'     => 'required|image|max:5120', 
-            'foto_ktp'     => 'required|image|max:5120',
+            'file_ktp'     => 'required|image|max:5120', // DIUBAH KEY FIELD DARI foto_ktp ke file_ktp
         ], [
             'nik.digits' => 'Nomor KTP harus terdiri dari 16 digit.',
             'nik.unique' => 'Nomor KTP ini sudah terdaftar.',
             'password.min' => 'Kata sandi minimal 8 karakter.',
             'foto_pic.required' => 'Foto PIC wajib diunggah.',
-            'foto_ktp.required' => 'File KTP PIC wajib diunggah.',
+            'file_ktp.required' => 'File KTP PIC wajib diunggah.', // Keterangan diubah
             'foto_pic.image' => 'File Foto PIC harus berupa gambar.',
-            'foto_ktp.image' => 'File KTP PIC harus berupa gambar.',
+            'file_ktp.image' => 'File KTP PIC harus berupa gambar.', // Keterangan diubah
             'foto_pic.max' => 'Ukuran file Foto PIC maksimal 5MB.',
-            'foto_ktp.max' => 'Ukuran file KTP PIC maksimal 5MB.',
+            'file_ktp.max' => 'Ukuran file KTP PIC maksimal 5MB.', // Keterangan diubah
         ]);
 
         $registrationData = $request->session()->get('registration_data');
 
         // 1. Upload File
-        // Catatan: Pastikan Anda telah mengkonfigurasi storage dan menjalankan php artisan storage:link
         $fotoPicPath = $request->file('foto_pic')->store('public/seller_docs/foto_pic');
-        $fotoKtpPath = $request->file('foto_ktp')->store('public/seller_docs/foto_ktp');
-        
-        // 2. Gabungkan data
-        $finalData = array_merge(
-            $registrationData,
-            [
-                'nik'          => $validated['nik'],
-                'password'     => bcrypt($validated['password']),
-                'foto_pic_url' => Storage::url($fotoPicPath),
-                'foto_ktp_url' => Storage::url($fotoKtpPath),
-                'role'         => 'seller', // Tambahkan role jika diperlukan
-                'is_verified'  => false,    // Set status belum diverifikasi
-            ]
-        );
+        $fileKtpPath = $request->file('file_ktp')->store('public/seller_docs/file_ktp'); // DIUBAH KEY
 
+        // 2. Buat Token Aktivasi
+        $activationToken = Str::random(60); 
+        
         // 3. Simpan ke database
-        // Catatan: Pastikan model User Anda memiliki semua field ini di $fillable
-        User::create([
-            'nama_toko'  => $finalData['nama_toko'],
-            'deskripsi'  => $finalData['deskripsi'] ?? null,
-            'nama_pic'   => $finalData['nama_pic'],
-            'no_hp'      => $finalData['hp_pic'],
-            'email'      => $finalData['email_pic'],
-            'alamat_pic' => $finalData['alamat_pic'],
-            'rt'         => $finalData['rt'],
-            'rw'         => $finalData['rw'],
-            'kelurahan'  => $finalData['kelurahan'],
-            'kabupaten'  => $finalData['kabupaten'],
-            'provinsi'   => $finalData['provinsi'],
-            'nik'        => $finalData['nik'],
-            'password'   => $finalData['password'],
-            'foto_pic_url' => $finalData['foto_pic_url'],
-            'foto_ktp_url' => $finalData['foto_ktp_url'],
-            'role'       => $finalData['role'],
-            'is_verified' => $finalData['is_verified'],
+        // Catatan: Semua key di array ini harus ada di properti $fillable Model User.
+        $user = User::create([
+            'nama_toko'     => $registrationData['nama_toko'],
+            'deskripsi'     => $registrationData['deskripsi'] ?? null,
+            'nama_pic'      => $registrationData['nama_pic'],
+            'no_hp'         => $registrationData['no_hp'],
+            'email'         => $registrationData['email'],
+            'alamat_pic'    => $registrationData['alamat_pic'],
+            'rt'            => $registrationData['rt'],
+            'rw'            => $registrationData['rw'],
+            'kelurahan'     => $registrationData['kelurahan'],
+            'kabupaten'     => $registrationData['kabupaten'],
+            'provinsi'      => $registrationData['provinsi'],
+            'nik'           => $validated['nik'],
+            'password'      => bcrypt($validated['password']),
+            
+            // SINKRONISASI DENGAN KOLOM MIGRASI
+            'foto_pic'      => Storage::url($fotoPicPath), // Menggunakan Storage::url untuk path yang dapat diakses publik
+            'file_ktp'      => Storage::url($fileKtpPath), // Menggunakan Storage::url untuk path yang dapat diakses publik
+
+            // SET NILAI DEFAULT UNTUK KOLOM VERIFIKASI/STATUS
+            'status_akun'       => 'pending', // Default pending
+            'activation_token'  => $activationToken,
+            'email_verified_at' => null, 
+            'verification_date' => null,
+            // 'role'            => 'seller', // Hapus jika 'role' tidak ada di migrasi
         ]);
 
         // 4. Bersihkan session
         $request->session()->forget('registration_data');
         
+        // TODO: Kirim email verifikasi ke $user->email menggunakan $activationToken
+
         // 5. Arahkan ke halaman sukses
         return redirect()->route('register.success'); 
     }
@@ -156,4 +162,6 @@ class RegisterController extends Controller
     {
         return view('auth.register.success');
     }
+
+    // TODO: Tambahkan fungsi untuk verifikasi email (handle route /verify/{token})
 }
