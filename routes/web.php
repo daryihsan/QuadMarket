@@ -5,18 +5,45 @@ use App\Http\Controllers\SellerDashboardController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PlatformController;
 use Illuminate\Support\Facades\Route;
-
-Route::get('/', function () {
-    return view('welcome');
+use App\Http\Controllers\RegisterController;
+Route::get('/', action: function () {
+    return view('home');
 });
+// regist
+Route::get('/register/step1', [RegisterController::class, 'showStep1'])->name('register.step1');
+Route::post('/register/step1', [RegisterController::class, 'processStep1'])->name('register.step1.post');
 
+Route::get('/register/step2', [RegisterController::class, 'showStep2'])->name('register.step2');
+Route::post('/register/step2', [RegisterController::class, 'processStep2'])->name('register.step2.post');
+
+Route::get('/register/step3', [RegisterController::class, 'showStep3'])->name('register.step3');
+Route::post('/register/step3', [RegisterController::class, 'processStep3'])->name('register.step3.post');
+// Rute baru untuk halaman sukses
+Route::get('/register/success', [RegisterController::class, 'showSuccess'])->name('register.success');
+
+// Tambahkan route login sebagai referensi
+Route::get('/login', function () {
+    return view('auth.login'); // Asumsi ada view login
+})->name('login');
+
+Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+
+
+// Route Home setelah berhasil masuk
+Route::get('/home', function () {
+    return view('home'); // Asumsi ada view home
+})->middleware('auth')->name('home');
 Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
 Route::get('/verify-otp', [AuthController::class, 'showVerifyOtp'])->name('verify.otp');
 Route::post('/verify-otp', [AuthController::class, 'verifyOtp']);
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+//Route::get('/login', action: [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+//Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/product/detail', function () {
+    return view('products.detail');
+});
 
 // Route::middleware('auth')->prefix('seller')->name('seller.')->group(function() {
 //     Route::get('/dashboard', [SellerDashboardController::class, 'index'])->name('dashboard');
@@ -56,4 +83,12 @@ Route::prefix('platform')->name('platform.')->group(function () {
     Route::get('/verifikasi/{id}', [PlatformController::class, 'verificationDetail'])->name('verifikasi.detail');
     // POST Request untuk Aksi Terima/Tolak
     Route::post('/verifikasi/{id}/process', [PlatformController::class, 'processVerification'])->name('verifikasi.process');
+Route::middleware('auth')->prefix('seller')->name('seller.')->group(function() {
+    // Route::get('/dashboard', [SellerDashboardController::class, 'index'])->name('dashboard');
+    // Route::get('/product/create', [ProductController::class, 'create'])->name('product.create');
+    // Route::post('/product', [ProductController::class, 'store'])->name('product.store');
 });
+
+// Route::get('/home', function () {
+//     return view('home');
+// });
