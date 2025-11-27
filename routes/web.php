@@ -43,11 +43,18 @@ Route::get('/product/detail', function () {
 });
 
 Route::middleware('auth')->prefix('seller')->name('seller.')->group(function() {
-    // Route::get('/dashboard', [SellerDashboardController::class, 'index'])->name('dashboard');
-    // Route::get('/product/create', [ProductController::class, 'create'])->name('product.create');
-    // Route::post('/product', [ProductController::class, 'store'])->name('product.store');
+    Route::get('/dashboard', [SellerDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/products/create', [SellerDashboardController::class, 'createProduct'])->name('products.create');
 });
-
+Route::get('/seller/dashboard', action: function () {
+    return view('seller.dashboard');
+});
+Route::get('/seller/product/create', action: function () {
+    return view('seller.product.create');
+});
+Route::get('/seller/product/add', action: function () {
+    return view('seller.product.add');
+});
 // Route::get('/home', function () {
 //     return view('home');
 // });
