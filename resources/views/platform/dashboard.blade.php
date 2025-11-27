@@ -73,7 +73,7 @@
                     <h1 class="text-2xl font-bold text-blue-900">Dashboard Platform</h1>
                     <p class="text-gray-600">Selamat Datang, Admin QuadMarket!</p>
                 </div>
-                <img src="assets/images/logo.png" alt="QuadMarket" class="h-10">
+                <img src="{{ url('assets/images/logo.png') }}" alt="QuadMarket" class="h-20">
             </div>
 
             <!-- Stats Grid -->

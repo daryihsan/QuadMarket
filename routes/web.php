@@ -18,11 +18,11 @@ Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::middleware('auth')->prefix('seller')->name('seller.')->group(function() {
-    Route::get('/dashboard', [SellerDashboardController::class, 'index'])->name('dashboard');
-    Route::get('/product/create', [ProductController::class, 'create'])->name('product.create');
-    Route::post('/product', [ProductController::class, 'store'])->name('product.store');
-});
+// Route::middleware('auth')->prefix('seller')->name('seller.')->group(function() {
+//     Route::get('/dashboard', [SellerDashboardController::class, 'index'])->name('dashboard');
+//     Route::get('/product/create', [ProductController::class, 'create'])->name('product.create');
+//     Route::post('/product', [ProductController::class, 'store'])->name('product.store');
+// });
 
 Route::get('/dashboard', function () {
         return view('platform.dashboard');
@@ -51,13 +51,9 @@ Route::prefix('platform')->name('platform.')->group(function () {
     Route::get('/laporan/produk', function () {
         return view('platform.produk');
     })->name('laporan.produk');
-<<<<<<< HEAD
     // Verifikasi Penjual (SRS-MartPlace-02)
     Route::get('/verifikasi', [PlatformController::class, 'verificationList'])->name('verifikasi.list');
     Route::get('/verifikasi/{id}', [PlatformController::class, 'verificationDetail'])->name('verifikasi.detail');
     // POST Request untuk Aksi Terima/Tolak
     Route::post('/verifikasi/{id}/process', [PlatformController::class, 'processVerification'])->name('verifikasi.process');
 });
-=======
-});
->>>>>>> 4febb3c7a5839559b4f434759998503815f26a62
