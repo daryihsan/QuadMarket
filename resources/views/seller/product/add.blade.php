@@ -1,18 +1,22 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tambah Produk Baru - Totem</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
+    <title>Tambah Produk Baru Totem</title>
+    <link href="[https://fonts.googleapis.com/css?family=Roboto:wght@300;400;500;700&display=swap](https://fonts.googleapis.com/css?family=Roboto:wght@300;400;500;700&display=swap)" rel="stylesheet">
+    <link rel="stylesheet" href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css)">
     <style>
         :root {
-            --primary-color: #007bff; /* Biru */
-            --secondary-color: #6c757d; /* Abu-abu */
-            --background-color: #f8f9fa; /* Background utama */
-            --card-background: #ffffff; /* Background Card */
+            --primary-color: #007bff;
+            /* Biru */
+            --secondary-color: #6c757d;
+            /* Abu-abu */
+            --background-color: #f8f9fa;
+            /* Background utama */
+            --card-background: #ffffff;
+            /* Background Card */
             --text-color: #212529;
             --border-color: #e9ecef;
         }
@@ -35,7 +39,7 @@
             margin: 0 auto;
         }
 
-        /* --- HEADER & NAVIGATION --- */
+        /* HEADER & NAVIGATION */
         .header-section {
             display: flex;
             justify-content: space-between;
@@ -73,12 +77,12 @@
         }
 
         .brand-logo {
-            font-weight: bold; 
-            color: var(--primary-color); 
+            font-weight: bold;
+            color: var(--primary-color);
             font-size: 1.5em;
         }
 
-        /* --- CARD FORM SECTIONS --- */
+        /* CARD FORM SECTIONS */
         .card {
             background-color: var(--card-background);
             padding: 30px;
@@ -94,8 +98,7 @@
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 15px;
         }
-        
-        /* Subtitle untuk Varian Produk */
+
         .card-subtitle {
             font-size: 1em;
             color: var(--secondary-color);
@@ -103,7 +106,7 @@
             margin-bottom: 20px;
         }
 
-        /* --- FOTO PRODUK SECTION --- */
+        /* FOTO PRODUK SECTION */
         .photo-upload-area {
             border: 2px dashed var(--border-color);
             border-radius: 8px;
@@ -135,7 +138,7 @@
             display: block;
         }
 
-        /* --- FORM ELEMENTS (Input, Select, Textarea) --- */
+        /* FORM ELEMENTS */
         .form-group {
             margin-bottom: 20px;
         }
@@ -146,7 +149,8 @@
             margin-bottom: 8px;
         }
 
-        .input-full, .input-half {
+        .input-full,
+        .input-half {
             width: 100%;
             padding: 12px 15px;
             border: 1px solid var(--border-color);
@@ -155,7 +159,8 @@
             transition: border-color 0.2s;
         }
 
-        .input-full:focus, .input-half:focus {
+        .input-full:focus,
+        .input-half:focus {
             outline: none;
             border-color: var(--primary-color);
         }
@@ -171,7 +176,7 @@
             gap: 20px;
         }
 
-        /* --- VARIAN PRODUK SECTION --- */
+        /* VARIAN PRODUK SECTION */
         .variant-header {
             display: flex;
             justify-content: space-between;
@@ -180,7 +185,7 @@
             border-bottom: 1px solid var(--border-color);
             margin-bottom: 15px;
         }
-        
+
         .add-variant-btn {
             background-color: var(--primary-color);
             color: white;
@@ -202,14 +207,13 @@
         .add-variant-btn i {
             margin-right: 5px;
         }
-        
+
         .no-variant-text {
             color: var(--secondary-color);
             font-size: 0.9em;
         }
 
-
-        /* --- FOOTER AKSI (Button) --- */
+        /* FOOTER AKSI (Button) */
         .action-footer {
             display: flex;
             justify-content: flex-end;
@@ -245,12 +249,12 @@
         .save-btn:hover {
             opacity: 0.9;
         }
-
     </style>
 </head>
+
 <body>
     <div class="container">
-        <a href="#" class="back-link">
+        <a href="{{ route('seller.products.index') }}" class="back-link">
             <i class="fas fa-arrow-left"></i> Kembali ke Daftar Produk
         </a>
 
@@ -259,91 +263,103 @@
                 <h1>Tambah Produk Baru</h1>
                 <p>Lengkapi informasi produk yang akan dijual</p>
             </div>
-            <div class="brand-logo">QuadMarket</div> 
+            <div class="brand-logo">QuadMarket</div>
         </div>
 
-        <div class="card">
-            <h2>Foto Produk</h2>
-            <div class="photo-upload-area">
-                <i class="fas fa-cloud-upload-alt upload-icon"></i>
-                <div class="upload-text">Klik untuk mengunggah atau seret dan lepas</div>
-                <small class="upload-hint">Format: JPG, PNG. Maksimal 5 foto. Foto pertama akan menjadi foto utama.</small>
-                <input type="file" multiple accept=".jpg,.jpeg,.png" style="display: none;">
-            </div>
-        </div>
+        <form action="{{ route('seller.products.store') }}" method="POST">
+            @csrf
 
-        <div class="card">
-            <h2>Informasi Produk</h2>
-            <div class="form-group">
-                <label for="namaProduk">Nama Produk</label>
-                <input type="text" id="namaProduk" class="input-full" placeholder="Contoh: Buku Panduan Skripsi">
-            </div>
-            
-            <div class="form-group">
-                <label for="kategori">Kategori</label>
-                <select id="kategori" class="input-full">
-                    <option value="">Pilih salah satu</option>
-                    <option value="elektronik">Elektronik</option>
-                    <option value="pakaian">Pakaian</option>
-                    <option value="rumah">Rumah Tangga</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="deskripsi">Deskripsi</label>
-                <textarea id="deskripsi" class="input-full" placeholder="Jelaskan produk Anda secara detail..."></textarea>
-            </div>
-
-            <div class="two-column-group">
-                <div class="form-group">
-                    <label for="kondisi">Kondisi</label>
-                    <select id="kondisi" class="input-half">
-                        <option value="">Pilih kondisi barang</option>
-                        <option value="baru">Baru</option>
-                        <option value="bekas">Bekas</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="minimalPemesanan">Minimal Pemesanan</label>
-                    <input type="number" id="minimalPemesanan" class="input-half" value="1" min="1">
+            <div class="card">
+                <h2>Foto Produk</h2>
+                <div class="photo-upload-area">
+                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                    <div class="upload-text">Klik untuk mengunggah atau seret dan lepas</div>
+                    <small class="upload-hint">Format: JPG, PNG. Maksimal 5 foto. Foto pertama akan menjadi foto
+                        utama.</small>
+                    <input type="file" name="images[]" multiple accept=".jpg,.jpeg,.png" style="display: none;">
                 </div>
             </div>
-        </div>
 
-        <div class="card">
-            <h2>Harga & Stok</h2>
-            <div class="two-column-group">
+            <div class="card">
+                <h2>Informasi Produk</h2>
                 <div class="form-group">
-                    <label for="harga">Harga (Rp)</label>
-                    <input type="number" id="harga" class="input-half" placeholder="0" min="0">
+                    <label for="name">Nama Produk</label>
+                    <input type="text" id="name" name="name" class="input-full"
+                        placeholder="Contoh: Smartphone Canggih X1" required value="{{ old('name') }}">
+                    @error('name') <small style="color: red;">{{ $message }}</small> @enderror
                 </div>
                 <div class="form-group">
-                    <label for="stok">Stok Barang</label>
-                    <input type="number" id="stok" class="input-half" placeholder="0" min="0">
+                    <label for="category_id">Kategori</label>
+                    <select id="category_id" name="category_id" class="input-full">
+                        <option value="">Pilih salah satu</option>
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                                {{ $category->name }}
+                            </option>
+                        @endforeach
+                        </select>
+                    @error('category_id') <small style="color: red;">{{ $message }}</small> @enderror
+                </div>
+                <div class="form-group">
+                    <label for="description">Deskripsi</label>
+                    <textarea id="description" name="description" class="input-full"
+                        placeholder="Jelaskan produk Anda secara detail...">{{ old('description') }}</textarea>
+                    @error('description') <small style="color: red;">{{ $message }}</small> @enderror
+                </div>
+                <div class="two-column-group">
+                    <div class="form-group">
+                        <label for="kondisi">Kondisi</label>
+                        <select id="kondisi" name="condition" class="input-half">
+                            <option value="">Pilih kondisi barang</option>
+                            <option value="baru">Baru</option>
+                            <option value="bekas">Bekas</option>
+                        </select>
+                        </div>
+                    <div class="form-group">
+                        <label for="min_order">Minimal Pemesanan</label>
+                        <input type="number" id="min_order" name="min_order" class="input-half" value="{{ old('min_order', 1) }}" min="1">
+                        </div>
                 </div>
             </div>
-        </div>
 
-        <div class="card">
-            <div class="variant-header">
-                <h2>Varian Produk</h2>
-                <button class="add-variant-btn">
-                    <i class="fas fa-plus"></i> Tambah Varian
-                </button>
+            <div class="card">
+                <h2>Harga & Stok</h2>
+                <div class="two-column-group">
+                    <div class="form-group">
+                        <label for="price">Harga (Rp)</label>
+                        <input type="number" id="price" name="price" class="input-half"
+                            placeholder="0" min="0" required value="{{ old('price') }}">
+                        @error('price') <small style="color: red;">{{ $message }}</small> @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="stock">Stok Barang</label>
+                        <input type="number" id="stock" name="stock" class="input-half"
+                            placeholder="0" min="1" required value="{{ old('stock') }}">
+                        @error('stock') <small style="color: red;">{{ $message }}</small> @enderror
+                    </div>
+                </div>
             </div>
-            <div class="card-subtitle">(Opsional)</div>
-            
-            <div class="no-variant-text">
-                Belum ada varian. Klik Tambah Varian untuk menambahkan varian seperti ukuran, warna, dll.
-            </div>
-        </div>
 
-        <div class="action-footer">
-            <button class="cancel-btn">Batal</button>
-            <button class="save-btn">Simpan Produk</button>
-        </div>
+            <div class="card">
+                <div class="variant-header">
+                    <h2>Varian Produk</h2>
+                    <button type="button" class="add-variant-btn">
+                        <i class="fas fa-plus"></i> Tambah Varian
+                    </button>
+                </div>
+                <div class="card-subtitle">(Opsional)</div>
+                <div class="no-variant-text">
+                    Belum ada varian. Klik Tambah Varian untuk menambahkan varian seperti ukuran, warna, dll.
+                </div>
+            </div>
+
+            <div class="action-footer">
+                <button type="button" class="cancel-btn" onclick="window.location.href='{{ route('seller.products.index') }}'">Batal</button>
+                <button type="submit" class="save-btn">Simpan Produk</button>
+            </div>
+        </form>
     </div>
-    
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const uploadArea = document.querySelector('.photo-upload-area');
@@ -354,25 +370,30 @@
                 fileInput.click();
             });
 
-            // Mencegah default browser behavior untuk drag and drop
+            // Mencegah default browser behavior untuk drag and drop (dari Quad.pdf)
             ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
                 uploadArea.addEventListener(eventName, preventDefaults, false);
             });
 
-            function preventDefaults (e) {
+            function preventDefaults(e) {
                 e.preventDefault();
                 e.stopPropagation();
             }
 
-            // Highlighting area saat file di-drag over
+            // Highlighting area saat file di-drag over (dari Quad.pdf)
             ['dragenter', 'dragover'].forEach(eventName => {
-                uploadArea.addEventListener(eventName, () => uploadArea.style.borderColor = '#007bff', false);
-            });
-            ['dragleave', 'drop'].forEach(eventName => {
-                uploadArea.addEventListener(eventName, () => uploadArea.style.borderColor = '#e9ecef', false);
+                uploadArea.addEventListener(eventName, () => {
+                    uploadArea.style.borderColor = '#007bff'
+                }, false);
             });
 
-            // Handle file drop (fungsi ini hanya alert, bukan upload sebenarnya)
+            ['dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, () => {
+                    uploadArea.style.borderColor = '#e9ecef'
+                }, false);
+            });
+
+            // Handle file drop (fungsi ini hanya alert, bukan upload sebenarnya) (dari Quad.pdf)
             uploadArea.addEventListener('drop', (e) => {
                 const dt = e.dataTransfer;
                 const files = dt.files;
@@ -381,17 +402,12 @@
                 }
             }, false);
 
-            // Button actions dummy
-            document.querySelector('.save-btn').addEventListener('click', () => {
-                alert('Fungsi Simpan Produk dipanggil! (Data tidak disimpan)');
-            });
-            document.querySelector('.cancel-btn').addEventListener('click', () => {
-                alert('Fungsi Batal dipanggil! Kembali ke daftar produk.');
-            });
+            // Button actions dummy (dari Quad.pdf, diganti dengan action form submit)
             document.querySelector('.add-variant-btn').addEventListener('click', () => {
                 alert('Fungsi Tambah Varian dipanggil! (Akan membuka modal atau menambah form)');
             });
         });
     </script>
 </body>
+
 </html>

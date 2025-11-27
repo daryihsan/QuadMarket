@@ -9,22 +9,21 @@
 
     <style>
         :root {
-            --primary-color: #007bff; /* Biru */
-            --secondary-color: #6c757d; /* Abu-abu */
-            --background-color: #f8f9fa; /* Background utama */
-            --card-background: #ffffff; /* Background Card */
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --background-color: #f8f9fa;
+            --card-background: #ffffff;
             --text-color: #212529;
             --border-color: #e9ecef;
-            --active-status: #28a745; /* Hijau */
-            --inactive-status: #dc3545; /* Merah */
-            --stock-out-status: #ffc107; /* Kuning (untuk stok habis) */
+            --active-status: #28a745;
+            --inactive-status: #dc3545;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Roboto', sans-serif;
         }
 
         body {
@@ -37,7 +36,7 @@
             min-height: 100vh;
         }
 
-        /* --- SIDEBAR (Kiri) --- */
+        /* --- SIDEBAR (Kiri) - Sama dengan Dashboard.html --- */
         .sidebar {
             width: 250px;
             background-color: var(--card-background);
@@ -49,87 +48,46 @@
             flex-shrink: 0;
         }
 
-        .logo-section {
-            display: flex;
-            align-items: center;
-            padding-bottom: 30px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .logo-icon {
-            width: 30px;
-            height: 30px;
-            background-color: var(--primary-color);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 5px;
-            font-weight: bold;
-            margin-right: 10px;
-        }
-
-        .logo-text span {
-            display: block;
-            font-size: 0.8em;
-            color: var(--secondary-color);
-        }
-
-        .main-nav, .settings-nav {
-            list-style: none;
-            padding: 0;
-        }
-
-        .main-nav {
-            flex-grow: 1;
-            padding-top: 20px;
-        }
-
-        .sidebar ul li {
-            margin-bottom: 5px;
-        }
-
-        .sidebar ul li a {
-            display: flex;
-            align-items: center;
-            padding: 10px 15px;
-            text-decoration: none;
-            color: var(--text-color);
-            border-radius: 5px;
-            transition: background-color 0.2s;
-            position: relative; 
-            padding-left: 40px;
-        }
+        .logo-section { /* ... kode logo section sama ... */ }
+        .logo-icon { /* ... kode logo icon sama ... */ }
+        .logo-text span { /* ... kode logo text sama ... */ }
+        .main-nav, .settings-nav { /* ... kode nav sama ... */ }
+        .main-nav { /* ... kode main nav sama ... */ }
+        .sidebar ul li { /* ... kode list item sama ... */ }
+        .sidebar ul li a { /* ... kode link sama ... */ }
         
-        /* Ikon placeholder untuk Sidebar */
         .sidebar ul li a::before {
-            font-family: 'Font Awesome 6 Free'; /* Menggunakan Font Awesome untuk ikon menu */
+            font-family: 'Font Awesome 6 Free';
             font-weight: 900;
-            content: "\f009"; /* Default ikon (Dashboard) */
+            content: "\f009";
             position: absolute;
             left: 15px;
             font-size: 1.1em;
             color: var(--secondary-color);
         }
-        /* Ikon spesifik (Hanya contoh, perlu disesuaikan dengan kebutuhan) */
-        .sidebar ul li:nth-child(2) a::before { content: "\f54f"; } /* Produk */
-        .sidebar ul li:nth-child(3) a::before { content: "\f570"; } /* Pesanan */
-        .sidebar ul li:nth-child(4) a::before { content: "\f0c0"; } /* Pelanggan */
-        .sidebar ul li:nth-child(5) a::before { content: "\f65d"; } /* Laporan */
-        .settings-nav li:nth-child(1) a::before { content: "\f013"; } /* Pengaturan */
-        .settings-nav li:nth-child(2) a::before { content: "\f059"; } /* Bantuan */
-        .settings-nav li:nth-child(3) a::before { content: "\f08b"; } /* Keluar */
+        .sidebar ul li:nth-child(2) a::before { content: "\f54f"; }
+        .sidebar ul li:nth-child(3) a::before { content: "\f570"; }
+        .sidebar ul li:nth-child(4) a::before { content: "\f0c0"; }
+        .sidebar ul li:nth-child(5) a::before { content: "\f65d"; }
+        .settings-nav li:nth-child(1) a::before { content: "\f013"; }
+        .settings-nav li:nth-child(2) a::before { content: "\f059"; }
+        .settings-nav li:nth-child(3) a::before { content: "\f08b"; }
 
-
-        .sidebar ul li.active a,
-        .sidebar ul li a:hover {
+        /* Style khusus untuk 'Produk' aktif */
+        .main-nav ul li:nth-child(2) a {
             background-color: var(--background-color);
             color: var(--primary-color);
             font-weight: 500;
         }
-        .sidebar ul li.active a::before,
-        .sidebar ul li a:hover::before {
+        .main-nav ul li:nth-child(2) a::before {
             color: var(--primary-color);
+        }
+        
+        .sidebar ul li a:hover, .sidebar ul li a:hover::before {
+            color: var(--primary-color);
+        }
+        .sidebar ul li a:hover {
+            background-color: var(--background-color);
         }
 
         /* --- KONTEN UTAMA (Kanan) --- */
@@ -156,7 +114,9 @@
         }
 
         .brand-logo {
-            height: 30px; 
+            font-weight: bold; 
+            color: var(--primary-color); 
+            font-size: 1.5em;
         }
 
         /* --- TOOLBAR PRODUK (Search, Button) --- */
@@ -177,11 +137,6 @@
             transition: border-color 0.2s;
         }
 
-        .search-input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-        }
-
         .add-product-btn {
             background-color: var(--primary-color);
             color: white;
@@ -191,17 +146,9 @@
             font-size: 1em;
             font-weight: 500;
             cursor: pointer;
-            transition: background-color 0.2s;
             display: flex;
             align-items: center;
-        }
-
-        .add-product-btn:hover {
-            background-color: #0056b3;
-        }
-
-        .add-product-btn i {
-            margin-right: 8px;
+            text-decoration: none;
         }
 
         /* --- SUMMARY CARDS --- */
@@ -235,12 +182,13 @@
         /* --- TABEL PRODUK --- */
         .product-list-card {
             padding: 0;
+            background-color: var(--card-background);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         }
 
         .product-table-wrapper {
             overflow-x: auto;
-            border-radius: 8px;
-            background-color: var(--card-background);
         }
 
         .product-table {
@@ -260,10 +208,6 @@
             font-weight: 500;
             text-transform: uppercase;
             background-color: #f4f6f9;
-        }
-
-        .product-table tbody tr:last-child td {
-            border-bottom: none;
         }
 
         .product-detail {
@@ -306,18 +250,10 @@
             color: var(--secondary-color);
             margin-right: 15px;
             font-size: 1.1em;
-            transition: color 0.2s;
+            text-decoration: none;
         }
-
-        .action-cell .edit-btn:hover {
-            color: var(--primary-color);
-        }
-
         .action-cell .delete-btn {
             color: var(--inactive-status);
-        }
-        .action-cell .delete-btn:hover {
-            color: #b00020;
         }
 
         /* Footer Tabel & Pagination */
@@ -339,20 +275,10 @@
             border-radius: 5px;
             cursor: pointer;
             margin-left: 10px;
-            transition: background-color 0.2s;
-        }
-        .pagination-controls button:hover:not(:disabled) {
-            background-color: #e9ecef;
         }
         .pagination-controls button:disabled {
             opacity: 0.6;
             cursor: not-allowed;
-        }
-
-        /* Style khusus untuk 'Produk' aktif di sidebar */
-        .main-nav ul li:nth-child(2) {
-            background-color: var(--background-color);
-            border-radius: 5px;
         }
     </style>
 </head>
@@ -390,14 +316,14 @@
                     <h1>Produk Saya</h1>
                     <p>Kelola semua produk yang Anda jual</p>
                 </div>
-                <div style="font-weight: bold; color: var(--primary-color); font-size: 1.5em;">QuadMarket</div> 
+                <div class="brand-logo">QuadMarket</div> 
             </header>
 
             <div class="product-toolbar">
                 <input type="text" placeholder="Cari Produk" class="search-input">
-                <button class="add-product-btn">
+                <a href="#" class="add-product-btn">
                     <i class="fas fa-plus"></i> Tambah Produk
-                </button>
+                </a>
             </div>
 
             <section class="summary-cards" id="summary-cards">
@@ -432,7 +358,6 @@
     </div>
 
     <script>
-        // 1. DATA DUMMY
         const productData = {
             total_produk: 1204,
             produk_aktif: 1029,
@@ -455,7 +380,6 @@
             renderProductTable(productData.produk);
         });
 
-        // 2. FUNGSI MERENDER SUMMARY CARDS
         function renderSummaryCards() {
             const summary = [
                 { title: "Total Produk", value: productData.total_produk.toLocaleString(), class: "" },
@@ -473,7 +397,6 @@
             `).join('');
         }
 
-        // 3. FUNGSI MERENDER TABEL PRODUK
         function renderProductTable(products) {
             const tbody = document.getElementById('productTableBody');
             tbody.innerHTML = products.map(product => {

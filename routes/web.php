@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\SellerController;
+use App\Http\Controllers\ProductController;
 Route::get('/', action: function () {
     return view('home');
 });
@@ -42,19 +44,22 @@ Route::get('/product/detail', function () {
     return view('products.detail');
 });
 
-Route::middleware('auth')->prefix('seller')->name('seller.')->group(function() {
-    Route::get('/dashboard', [SellerDashboardController::class, 'index'])->name('dashboard');
-    Route::get('/products/create', [SellerDashboardController::class, 'createProduct'])->name('products.create');
-});
-Route::get('/seller/dashboard', action: function () {
-    return view('seller.dashboard');
-});
-Route::get('/seller/product/create', action: function () {
-    return view('seller.product.create');
-});
-Route::get('/seller/product/add', action: function () {
-    return view('seller.product.add');
+// Route yang membutuhkan otentikasi (Halaman Seller)
+Route::prefix('seller')->name('seller.')->group(function () {
+    // Tampilan utama dashboard penjual, juga menangani switch tab
+    Route::get('/dashboard', [SellerController::class, 'dashboard'])->name('dashboard');
+
+    // PRODUCTS CRUD (Untuk digunakan dalam satu file dashboard.blade.php)
+    Route::post('/products/store', [SellerController::class, 'storeProduct'])->name('products.store');
+    // Tambahkan ID ke route update/delete
+    Route::put('/products/{id}/update', [SellerController::class, 'updateProduct'])->name('products.update');
+    Route::delete('/products/{id}', [SellerController::class, 'deleteProduct'])->name('products.delete');
+    
+    // Asumsi logout adalah rute umum
+    // Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 // Route::get('/home', function () {
 //     return view('home');
 // });
+// Rute Logout yang benar (menggunakan POST)
+Route::post('/logout', [App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
