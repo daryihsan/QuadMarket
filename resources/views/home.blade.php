@@ -100,71 +100,77 @@
     </section>
 
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 mb-16">
-        <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-6">Produk yang Sedang Tren</h2>
+    <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-6">Produk yang Sedang Tren</h2>
         
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-6">
-            
-            <a href="#" class="product-card block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl">
-                <img src="assets/images/headphone.png" alt="Headphone Gaming" class="w-full h-40 object-cover">
-                <div class="p-4">
-                    <p class="text-sm font-medium text-gray-800 truncate mb-1">Headphone Gaming</p>
-                    <div class="flex items-center mb-2 text-xs">
-                        <span class="font-semibold text-yellow-500 mr-1">⭐ 4.7</span>
-                        <span class="text-gray-500">(92)</span>
-                    </div>
-                    <p class="text-lg font-bold text-gray-900">230.000</p>
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-6">
+        
+        {{-- Headphone Gaming -> misal produk id 1 --}}
+        <a href="{{ route('products.show', 1) }}" class="product-card block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl">
+            <img src="assets/images/headphone.png" alt="Headphone Gaming" class="w-full h-40 object-cover">
+            <div class="p-4">
+                <p class="text-sm font-medium text-gray-800 truncate mb-1">Headphone Gaming</p>
+                <div class="flex items-center mb-2 text-xs">
+                    <span class="font-semibold text-yellow-500 mr-1">⭐ 4.7</span>
+                    <span class="text-gray-500">(92)</span>
                 </div>
-            </a>
+                <p class="text-lg font-bold text-gray-900">230.000</p>
+            </div>
+        </a>
 
-            <a href="#" class="product-card block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl">
-                <img src="assets/images/kursi.png" alt="Kursi Kayu Modern" class="w-full h-40 object-cover">
-                <div class="p-4">
-                    <p class="text-sm font-medium text-gray-800 truncate mb-1">Kursi Kayu Modern</p>
-                    <div class="flex items-center mb-2 text-xs">
-                        <span class="font-semibold text-yellow-500 mr-1">⭐ 4.2</span>
-                        <span class="text-gray-500">(180)</span>
-                    </div>
-                    <p class="text-lg font-bold text-gray-900">300.000</p>
+        {{-- Kursi Kayu Modern -> misal produk id 2 --}}
+        <a href="{{ route('products.show', 2) }}" class="product-card block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl">
+            <img src="assets/images/kursi.png" alt="Kursi Kayu Modern" class="w-full h-40 object-cover">
+            <div class="p-4">
+                <p class="text-sm font-medium text-gray-800 truncate mb-1">Kursi Kayu Modern</p>
+                <div class="flex items-center mb-2 text-xs">
+                    <span class="font-semibold text-yellow-500 mr-1">⭐ 4.2</span>
+                    <span class="text-gray-500">(180)</span>
                 </div>
-            </a>
+                <p class="text-lg font-bold text-gray-900">300.000</p>
+            </div>
+        </a>
 
-            <a href="#" class="product-card block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl">
-                <img src="assets/images/facemist.png" alt="Face Mist Laneige" class="w-full h-40 object-cover">
-                <div class="p-4">
-                    <p class="text-sm font-medium text-gray-800 truncate mb-1">Face Mist Laneige</p>
-                    <div class="flex items-center mb-2 text-xs">
-                        <span class="font-semibold text-yellow-500 mr-1">⭐ 4.9</span>
-                        <span class="text-gray-500">(296)</span>
-                    </div>
-                    <p class="text-lg font-bold text-gray-900">286.000</p>
+        {{-- Face Mist Laneige -> produk id 3 --}}
+        <a href="{{ route('products.show', 3) }}" class="product-card block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl">
+            <img src="assets/images/facemist.png" alt="Face Mist Laneige" class="w-full h-40 object-cover">
+            <div class="p-4">
+                <p class="text-sm font-medium text-gray-800 truncate mb-1">Face Mist Laneige</p>
+                <div class="flex items-center mb-2 text-xs">
+                    <span class="font-semibold text-yellow-500 mr-1">⭐ 4.9</span>
+                    <span class="text-gray-500">(296)</span>
                 </div>
-            </a>
+                <p class="text-lg font-bold text-gray-900">286.000</p>
+            </div>
+        </a>
 
-            <a href="#" class="product-card block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl">
-                <img src="assets/images/alpro.png" alt="Buku Algoritma" class="w-full h-40 object-cover">
-                <div class="p-4">
-                    <p class="text-sm font-medium text-gray-800 truncate mb-1">Buku Algoritma</p>
-                    <div class="flex items-center mb-2 text-xs">
-                        <span class="font-semibold text-yellow-500 mr-1">⭐ 4.5</span>
-                        <span class="text-gray-500">(60)</span>
-                    </div>
-                    <p class="text-lg font-bold text-gray-900">66.000</p>
+        {{-- Buku Algoritma -> produk id 4 --}}
+        <a href="{{ route('products.show', 4) }}" class="product-card block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl">
+            <img src="assets/images/alpro.png" alt="Buku Algoritma" class="w-full h-40 object-cover">
+            <div class="p-4">
+                <p class="text-sm font-medium text-gray-800 truncate mb-1">Buku Algoritma</p>
+                <div class="flex items-center mb-2 text-xs">
+                    <span class="font-semibold text-yellow-500 mr-1">⭐ 4.5</span>
+                    <span class="text-gray-500">(60)</span>
                 </div>
-            </a>
+                <p class="text-lg font-bold text-gray-900">66.000</p>
+            </div>
+        </a>
 
-            <a href="#" class="product-card block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl">
-                <img src="assets/images/kemeja.png" alt="Kemeja Wanita" class="w-full h-40 object-cover">
-                <div class="p-4">
-                    <p class="text-sm font-medium text-gray-800 truncate mb-1">Kemeja Wanita</p>
-                    <div class="flex items-center mb-2 text-xs">
-                        <span class="font-semibold text-yellow-500 mr-1">⭐ 5.0</span>
-                        <span class="text-gray-500">(220)</span>
-                    </div>
-                    <p class="text-lg font-bold text-gray-900">230.000</p>
+        {{-- Kemeja Wanita -> produk id 5 --}}
+        <a href="{{ route('products.show', 5) }}" class="product-card block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl">
+            <img src="assets/images/kemeja.png" alt="Kemeja Wanita" class="w-full h-40 object-cover">
+            <div class="p-4">
+                <p class="text-sm font-medium text-gray-800 truncate mb-1">Kemeja Wanita</p>
+                <div class="flex items-center mb-2 text-xs">
+                    <span class="font-semibold text-yellow-500 mr-1">⭐ 5.0</span>
+                    <span class="text-gray-500">(220)</span>
                 </div>
-            </a>
-        </div>
-    </section>
+                <p class="text-lg font-bold text-gray-900">230.000</p>
+            </div>
+        </a>
+    </div>
+</section>
+
 
     @include('layouts.footer')
 

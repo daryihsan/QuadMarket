@@ -29,4 +29,10 @@ class ProductController extends Controller
 
         return redirect()->route('seller.dashboard')->with('success','Produk berhasil ditambahkan!');
     }
+    
+    // DETAIL PRODUK PUBLIC
+    public function show(Product $product)
+    {
+        return view('products.detail', compact('product'));
+    }
 }

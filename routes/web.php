@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProductController;
 
 // regist
 Route::get('/register/step1', [RegisterController::class, 'showStep1'])->name('register.step1');
@@ -32,6 +33,9 @@ Route::middleware('auth')->prefix('seller')->name('seller.')->group(function() {
     Route::get('/product/create', [ProductController::class, 'create'])->name('product.create');
     Route::post('/product', [ProductController::class, 'store'])->name('product.store');
 });
+
+Route::get('/produk/{product}', [ProductController::class, 'show'])
+    ->name('products.show');
 
 // Route::get('/home', function () {
 //     return view('home');
