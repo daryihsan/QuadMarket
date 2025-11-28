@@ -21,10 +21,13 @@ class Product extends Model
         'description',
         'price',
         'stock',
+        'condition',
         'min_order',
         'status', // Opsional, jika Anda set status default di database
         // Tambahkan path gambar jika Anda menyimpannya di database
         'image_path',
+        'rating',
+        'total_ulasan'
         // Tambahkan field lain jika ada (seperti kondisi, dll)
     ];
 
@@ -37,8 +40,8 @@ class Product extends Model
     }
     
     // Anda juga bisa menambahkan relasi ke User (Penjual) di sini jika perlu
-    // public function user()
-    // {
-    //     return $this->belongsTo(User::class);
-    // }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

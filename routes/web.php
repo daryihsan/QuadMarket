@@ -5,6 +5,7 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SellerController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ReportController;
 Route::get('/', action: function () {
     return view('home');
 });
@@ -44,19 +45,19 @@ Route::get('/product/detail', function () {
     return view('products.detail');
 });
 
-// Route yang membutuhkan otentikasi (Halaman Seller)
-Route::prefix('seller')->name('seller.')->group(function () {
-    // Tampilan utama dashboard penjual, juga menangani switch tab
+// Route Penjual (Seller) - MIDDLEWARE 'auth' DIHAPUS SEMENTARA UNTUK DEBUGGING
+Route::prefix('seller')->name('seller.')->group(function () { 
+    // Tampilan utama dashboard penjual
     Route::get('/dashboard', [SellerController::class, 'dashboard'])->name('dashboard');
 
-    // PRODUCTS CRUD (Untuk digunakan dalam satu file dashboard.blade.php)
+    // PRODUCTS CRUD 
     Route::post('/products/store', [SellerController::class, 'storeProduct'])->name('products.store');
-    // Tambahkan ID ke route update/delete
-    Route::put('/products/{id}/update', [SellerController::class, 'updateProduct'])->name('products.update');
-    Route::delete('/products/{id}', [SellerController::class, 'deleteProduct'])->name('products.delete');
+    Route::put('/products/{product}', [SellerController::class, 'updateProduct'])->name('products.update');
+    Route::delete('/products/{product}', [SellerController::class, 'deleteProduct'])->name('products.destroy'); 
     
-    // Asumsi logout adalah rute umum
-    // Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    // Route untuk Laporan
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index'); // <-- Kunci: Diubah menjadi 'index'
+    Route::get('/reports/download', [ReportController::class, 'downloadPdf'])->name('reports.download'); // <-- Kunci: Route name disimplifikasi
 });
 // Route::get('/home', function () {
 //     return view('home');

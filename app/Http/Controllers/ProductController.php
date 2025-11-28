@@ -4,57 +4,109 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
-use Illuminate\Support\Facades\Storage; // Digunakan untuk upload file
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
     /**
-     * Tampilkan form Tambah Produk Baru.
-     * Route: seller.products.create
-     */
-    public function create()
-    {
-        $categories = Category::all();
-        // Asumsi file view Add Product ada di 'seller.product.add'
-        return view('seller.product.add', compact('categories')); 
-    }
-
-    /**
-     * Simpan data produk baru ke database.
-     * Route: seller.products.store (POST)
+     * Simpan data produk baru (Route: seller.products.store).
      */
     public function store(Request $request)
     {
-        // 1. Validasi Data
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
+        $validatedData = $request->validate([
+            'name'        => 'required|string|max:255',
             'description' => 'nullable|string',
-            'price' => 'required|numeric|min:0',
-            'stock' => 'required|integer|min:1',
+            'price'       => 'required|numeric|min:0',
+            'stock'       => 'required|integer|min:0',
             'category_id' => 'required|exists:categories,id',
-            'condition' => 'required|in:baru,bekas',
-            'min_order' => 'required|integer|min:1',
-            // Asumsi input file diberi nama 'foto_produk'
-            'foto_produk' => 'nullable|image|max:5120', // Maks 5MB
+            'condition'   => 'required|in:baru,bekas',
+            'min_order'   => 'required|integer|min:1',
+            'foto_produk' => 'nullable|image|max:5120', 
         ]);
 
-        $data['user_id'] = auth()->id();
-        $data['status'] = 'Aktif'; // Default status produk baru
-        
-        // 2. Upload Foto Produk
+        $productData = $validatedData;
+        $productData['user_id'] = Auth::id();
+        $productData['status'] = $validatedData['stock'] > 0 ? 'Aktif' : 'NonAktif'; 
+        $productData['rating'] = 0; 
+        $productData['total_ulasan'] = 0; 
+
+        // Upload Foto Produk
         if ($request->hasFile('foto_produk')) {
-            $fotoPath = $request->file('foto_produk')->store('public/product_images');
-            $data['image_path'] = Storage::url($fotoPath); // Simpan URL yang dapat diakses publik
+            $fotoPath = $request->file('foto_produk')->store('public/product_images'); 
+            $productData['image_path'] = Storage::url($fotoPath); 
         } else {
-             $data['image_path'] = null;
+            $productData['image_path'] = null;
         }
 
-        // Hapus 'foto_produk' dari array data karena tidak ada di tabel products
-        unset($data['foto_produk']); 
+        unset($productData['foto_produk']); 
 
-        // 3. Simpan ke Database
-        Product::create($data); 
+        Product::create($productData); 
 
-        return redirect()->route('seller.products.index')->with('success', 'Produk berhasil ditambahkan!');
+        return redirect()->route('seller.dashboard', ['tab' => 'products'])
+                         ->with('success', 'Produk berhasil ditambahkan dan gambar berhasil diunggah!');
+    }
+    
+    /**
+     * Update produk yang sudah ada (Route: seller.products.update).
+     */
+    public function update(Request $request, Product $product)
+    {
+        // Model binding menjamin $product adalah instance Product
+        if ($product->user_id !== Auth::id()) {
+            return redirect()->back()->with('error', 'Anda tidak berhak mengedit produk ini.');
+        }
+        
+        $validatedData = $request->validate([
+            'name'        => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'price'       => 'required|numeric|min:0',
+            'stock'       => 'required|integer|min:0',
+            'category_id' => 'required|exists:categories,id',
+            'condition'   => 'required|in:baru,bekas',
+            'min_order'   => 'required|integer|min:1',
+            'foto_produk' => 'nullable|image|max:5120',
+        ]);
+        
+        $productData = $validatedData;
+        $productData['status'] = $validatedData['stock'] > 0 ? 'Aktif' : 'NonAktif';
+
+        if ($request->hasFile('foto_produk')) {
+            // Hapus gambar lama
+            if ($product->image_path) {
+                $oldPath = str_replace(config('app.url') . '/storage', 'public', $product->image_path);
+                Storage::delete($oldPath);
+            }
+            $fotoPath = $request->file('foto_produk')->store('public/product_images');
+            $productData['image_path'] = Storage::url($fotoPath);
+        }
+
+        unset($productData['foto_produk']);
+
+        $product->update($productData);
+
+        return redirect()->route('seller.dashboard', ['tab' => 'products'])
+                         ->with('success', 'Produk berhasil diperbarui.');
+    }
+
+    /**
+     * Hapus produk (Route: seller.products.destroy).
+     */
+    public function destroy(Product $product)
+    {
+        if ($product->user_id !== Auth::id()) {
+            return redirect()->back()->with('error', 'Anda tidak berhak menghapus produk ini.');
+        }
+        
+        // Hapus gambar dari storage
+        if ($product->image_path) {
+            $path = str_replace(config('app.url') . '/storage', 'public', $product->image_path);
+            Storage::delete($path);
+        }
+
+        $product->delete();
+
+        return redirect()->route('seller.dashboard', ['tab' => 'products'])
+                         ->with('success', 'Produk berhasil dihapus.');
     }
 }
