@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 
-// MAILABLE
 use App\Mail\SellerVerificationMail;
 use App\Mail\SellerRejectionMail;
 
@@ -70,7 +69,7 @@ class PlatformController extends Controller
             $seller->save();
 
             // Kirim EMAIL VERIFIKASI
-            Mail::to($seller->email)->send(new SellerVerificationMail(
+            Mail::to($seller->email_pic)->send(new SellerVerificationMail(
                 $seller->nama_toko,
                 url('/login/login')
             ));
@@ -87,7 +86,7 @@ class PlatformController extends Controller
             $seller->save();
 
             // Kirim EMAIL PENOLAKAN
-            Mail::to($seller->email)->send(new SellerRejectionMail(
+            Mail::to($seller->email_pic)->send(new SellerRejectionMail(
                 $seller->nama_toko
             ));
 

@@ -21,7 +21,7 @@ return new class extends Migration
             // Data PIC
             $table->string('nama_pic');
             $table->string('no_hp');
-            $table->string('email')->unique();
+            $table->string('email_pic')->unique();
             $table->text('alamat_pic');
             $table->string('rt', 10);
             $table->string('rw', 10);

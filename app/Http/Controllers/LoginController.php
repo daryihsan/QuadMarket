@@ -24,16 +24,20 @@ class LoginController extends Controller
     public function processLogin(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
+            'email_pic' => 'required|email',
             'password' => 'required'
         ]);
 
-        if (Auth::attempt($request->only('email','password'))) {
+        if (Auth::attempt([
+            'email_pic' => $request->email_pic,
+            'password' => $request->password
+        ])) {
             return redirect()->intended('/dashboard-user')->with('success','Login berhasil!');
         }
 
-        return back()->withErrors(['email' => 'Email atau password salah']);
+        return back()->withErrors(['email_pic' => 'Email atau password salah']);
     }
+
 
     // ================= ADMIN LOGIN ===================
 

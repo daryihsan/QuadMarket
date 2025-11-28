@@ -24,7 +24,9 @@ class RegisterController extends Controller
             'deskripsi'  => 'nullable|string|max:500',
             'nama_pic'   => 'required|string|max:255',
             'hp_pic'     => 'required|string|max:15', 
-            'email_pic'  => 'required|email|unique:users,email',
+            // 'email_pic' => 'required|email|unique:users,email',
+            'email_pic' => 'required|email|unique:users,email_pic',
+
         ]);
 
         $request->session()->put('registration_data', $validated);
@@ -129,7 +131,7 @@ class RegisterController extends Controller
             'deskripsi'  => $finalData['deskripsi'] ?? null,
             'nama_pic'   => $finalData['nama_pic'],
             'no_hp'      => $finalData['hp_pic'],
-            'email'      => $finalData['email_pic'],
+            'email_pic'  => $finalData['email_pic'],
             'alamat_pic' => $finalData['alamat_pic'],
             'rt'         => $finalData['rt'],
             'rw'         => $finalData['rw'],

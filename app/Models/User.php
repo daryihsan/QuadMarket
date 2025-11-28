@@ -16,7 +16,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'deskripsi',
         'nama_pic',
         'no_hp',
-        'email',
+        'email_pic',
         'alamat_pic',
         'rt',
         'rw',
@@ -42,6 +42,22 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'remember_token',
     ];
+
+    public function getEmailAttribute()
+    {
+        return $this->email_pic;
+    }
+
+    public function username()
+    {
+        return 'email_pic';
+    }
+
+    public function getEmailForVerification()
+    {
+        return $this->email_pic;
+    }
+
 
     protected function casts(): array
     {

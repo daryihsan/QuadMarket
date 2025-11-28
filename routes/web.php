@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SellerController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\LoginController;
+
 Route::get('/', action: function () {
     return view('home');
 });
