@@ -6,14 +6,9 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PlatformController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegisterController;
-use App\Http\Controllers\VerificationController; 
-use App\Http\Controllers\LoginController; // <-- BARU: Import LoginController
-
-// ==========================================================
-// REGISTRASI MULTI-STEP (RegisterController)
-// ... (Rute registrasi tidak diubah) ...
-// ==========================================================
-Route::get('/', function () {
+use App\Http\Controllers\SellerController;
+use App\Http\Controllers\ReportController;
+Route::get('/', action: function () {
     return view('home');
 });
 
@@ -108,3 +103,22 @@ Route::prefix('platform')->name('platform.')->group(function () {
     // POST Request untuk Aksi Terima/Tolak
     Route::post('/verifikasi/{id}/process', [PlatformController::class, 'processVerification'])->name('verifikasi.process');
 });
+// Route Penjual (Seller) - MIDDLEWARE 'auth' DIHAPUS SEMENTARA UNTUK DEBUGGING
+Route::prefix('seller')->name('seller.')->group(function () { 
+    // Tampilan utama dashboard penjual
+    Route::get('/dashboard', [SellerController::class, 'dashboard'])->name('dashboard');
+
+    // PRODUCTS CRUD 
+    Route::post('/products/store', [SellerController::class, 'storeProduct'])->name('products.store');
+    Route::put('/products/{product}', [SellerController::class, 'updateProduct'])->name('products.update');
+    Route::delete('/products/{product}', [SellerController::class, 'deleteProduct'])->name('products.destroy'); 
+    
+    // Route untuk Laporan
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index'); // <-- Kunci: Diubah menjadi 'index'
+    Route::get('/reports/download', [ReportController::class, 'downloadPdf'])->name('reports.download'); // <-- Kunci: Route name disimplifikasi
+});
+// Route::get('/home', function () {
+//     return view('home');
+// });
+// Rute Logout yang benar (menggunakan POST)
+Route::post('/logout', [App\Http\Controllers\AuthController::class, 'logout'])->name('logout');
