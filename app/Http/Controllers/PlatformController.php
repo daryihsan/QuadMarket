@@ -87,7 +87,8 @@ class PlatformController extends Controller
 
             // Kirim EMAIL PENOLAKAN
             Mail::to($seller->email_pic)->send(new SellerRejectionMail(
-                $seller->nama_toko
+                $seller->nama_toko,
+                $request->alasan // tambahin
             ));
 
             return redirect()->route('platform.verifikasi.list')

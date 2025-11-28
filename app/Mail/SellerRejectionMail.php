@@ -10,11 +10,13 @@ class SellerRejectionMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $nama_toko;
+    public $username; // ini akan tersedia di view
+    public $alasan;
 
-    public function __construct($nama_toko)
+    public function __construct(string $username, ?string $alasan = null)
     {
-        $this->nama_toko = $nama_toko;
+        $this->username = $username;
+        $this->alasan = $alasan;
     }
 
     public function build()
