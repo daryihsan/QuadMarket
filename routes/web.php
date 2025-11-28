@@ -6,52 +6,57 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PlatformController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegisterController;
-// DITAMBAHKAN: Use statement untuk VerificationController
 use App\Http\Controllers\VerificationController; 
+use App\Http\Controllers\LoginController; // <-- BARU: Import LoginController
 
 // ==========================================================
 // REGISTRASI MULTI-STEP (RegisterController)
+// ... (Rute registrasi tidak diubah) ...
 // ==========================================================
 Route::get('/', function () {
     return view('home');
 });
 
 // regist
-Route::get('/register/step1', [RegisterController::class, 'showStep1'])->name('register.step1');
-Route::post('/register/step1', [RegisterController::class, 'processStep1'])->name('register.step1.post');
+Route::prefix('register')->name('register.')->group(function () {
+    Route::get('/step1', [RegisterController::class, 'showStep1'])
+        ->name('step1');
+    Route::post('/step1', [RegisterController::class, 'processStep1'])
+        ->name('step1.post');
 
-Route::get('/register/step2', [RegisterController::class, 'showStep2'])->name('register.step2');
-Route::post('/register/step2', [RegisterController::class, 'processStep2'])->name('register.step2.post');
+    Route::get('/step2', [RegisterController::class, 'showStep2'])
+        ->name('step2');
+    Route::post('/step2', [RegisterController::class, 'processStep2'])
+        ->name('step2.post');
 
-Route::get('/register/step3', [RegisterController::class, 'showStep3'])->name('register.step3');
-Route::post('/register/step3', [RegisterController::class, 'processStep3'])->name('register.step3.post');
+    Route::get('/step3', [RegisterController::class, 'showStep3'])
+        ->name('step3');
+    Route::post('/step3', [RegisterController::class, 'processStep3'])
+        ->name('step3.post');
 
-Route::get('/register/success', [RegisterController::class, 'showSuccess'])->name('register.success');
+    Route::get('/success', [RegisterController::class, 'showSuccess'])
+        ->name('success');
+});
 
 // ==========================================================
-// VERIFIKASI EMAIL (PENTING: DITAMBAHKAN)
-// Route ini menangani klik link aktivasi dari email.
+// VERIFIKASI EMAIL
 // ==========================================================
 Route::get('/email/verify/{token}/{email}', [VerificationController::class, 'verify'])
     ->name('verification.verify')
-    ->middleware('guest'); // Hanya untuk user yang belum login
-
+    ->middleware('guest');
 
 // ==========================================================
-// AUTH & LOGIN (Disarankan menggunakan satu set route)
+// AUTH & LOGIN
 // ==========================================================
-// Route Login
-Route::get('/login', function () {
-    return view('auth.login');
-})->name('login');
+Route::prefix('login')->group(function () {
+    Route::get('/pilih', [LoginController::class, 'showPilih'])->name('login.pilih');
 
-Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+    Route::get('/login', [LoginController::class, 'showLogin'])->name('login.login'); // Menampilkan form
+    Route::post('/login', [LoginController::class, 'processLogin'])->name('login.post.login'); // Memproses form post
 
-// Route Registrasi Tumpang Tindih (DIBERSIHKAN/DIHAPUS)
-// Hapus atau komen route di bawah ini karena Anda sudah menggunakan RegisterController:
-// Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-// Route::post('/register', [AuthController::class, 'register']);
-
+    Route::get('/admin', [LoginController::class, 'showAdmin'])->name('login.admin'); // Menampilkan form
+    Route::post('/admin', [LoginController::class, 'processAdmin'])->name('login.post.admin'); // Memproses form post
+});
 
 // Route Home setelah berhasil masuk
 Route::get('/home', function () {
@@ -72,6 +77,7 @@ Route::get('/dashboard', function () {
 
 // ==========================================================
 // PLATFORM ADMIN (PlatformController)
+// ... (Rute platform admin tidak diubah) ...
 // ==========================================================
 Route::prefix('platform')->name('platform.')->group(function () {
 

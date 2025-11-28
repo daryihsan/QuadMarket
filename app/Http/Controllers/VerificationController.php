@@ -20,23 +20,24 @@ class VerificationController extends Controller
                         ->first();
 
         if (!$user) {
-            // Jika token tidak valid atau pengguna tidak ditemukan
-            return redirect('/login')->with('error', 'Link aktivasi tidak valid atau sudah kedaluwarsa.');
+            return redirect()->route('auth.login.pilih')
+                ->with('error', 'Link aktivasi tidak valid atau sudah kedaluwarsa.');
         }
 
         if ($user->email_verified_at) {
-            // Jika akun sudah pernah diverifikasi
-            return redirect('/login')->with('info', 'Akun Anda sudah aktif. Silakan masuk.');
+            return redirect()->route('auth.login.pilih')
+                ->with('info', 'Akun Anda sudah aktif. Silakan masuk.');
         }
 
         // 2. Verifikasi akun
         $user->email_verified_at = Carbon::now();
-        $user->activation_token = null; // Hapus token setelah digunakan
+        $user->activation_token = null; 
         $user->save();
         
-        // 3. Opsional: Langsung loginkan user setelah verifikasi
+        // 3. (Opsional) Login otomatis
         Auth::login($user); 
 
-        return redirect('/home')->with('success', 'Akun Anda berhasil diaktifkan! Selamat datang di QuadMarket.');
+        return redirect()->route('auth.login.login')
+            ->with('success', 'Akun Anda berhasil diaktifkan! Selamat datang di QuadMarket.');
     }
 }
