@@ -113,6 +113,9 @@
                         <span class="text-gray-500">(92)</span>
                     </div>
                     <p class="text-lg font-bold text-gray-900">230.000</p>
+                    <div class="text-right">
+                        <span class="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">📍 Jakarta</span>
+                    </div>
                 </div>
             </a>
 
@@ -125,6 +128,9 @@
                         <span class="text-gray-500">(180)</span>
                     </div>
                     <p class="text-lg font-bold text-gray-900">300.000</p>
+                    <div class="text-right">
+                        <span class="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">📍 Bandung</span>
+                    </div>
                 </div>
             </a>
 
@@ -137,6 +143,9 @@
                         <span class="text-gray-500">(296)</span>
                     </div>
                     <p class="text-lg font-bold text-gray-900">286.000</p>
+                    <div class="text-right">
+                        <span class="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">📍 Semarang</span>
+                    </div>
                 </div>
             </a>
 
@@ -149,6 +158,9 @@
                         <span class="text-gray-500">(60)</span>
                     </div>
                     <p class="text-lg font-bold text-gray-900">66.000</p>
+                    <div class="text-right">
+                        <span class="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">📍 Jakarta</span>
+                    </div>
                 </div>
             </a>
 
@@ -161,6 +173,9 @@
                         <span class="text-gray-500">(220)</span>
                     </div>
                     <p class="text-lg font-bold text-gray-900">230.000</p>
+                    <div class="text-right">
+                        <span class="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">📍 Surabaya</span>
+                    </div>
                 </div>
             </a>
         </div>
