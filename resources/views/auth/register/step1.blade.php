@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Daftar sebagai Penjual - Katalog Produk Market Place</title>
+    <title>Daftar sebagai Penjual | QuadMarket</title>
 
     <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -202,7 +202,7 @@
 
                         <p class="mt-8 text-center text-sm text-gray-500 dark:text-gray-400">
                             Sudah punya akun?
-                            <a href="{{ route('login') }}"
+                            <a href="{{ route('login.pilih') }}"
                                 class="font-medium text-primary dark:text-accent hover:opacity-80">
                                 Masuk
                             </a>

@@ -5,8 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Auth\MustVerifyEmail; 
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail 
 {
     use HasFactory, Notifiable;
 
@@ -15,7 +16,7 @@ class User extends Authenticatable
         'deskripsi',
         'nama_pic',
         'no_hp',
-        'email',
+        'email_pic',
         'alamat_pic',
         'rt',
         'rw',
@@ -23,9 +24,18 @@ class User extends Authenticatable
         'kabupaten',
         'provinsi',
         'nik',
-        'foto_pic',
+        
+        // SINKRONISASI KOLOM UPLOAD/PATH SESUAI MIGRASI
+        'foto_pic', 
         'file_ktp',
+        
         'password',
+        
+        // SINKRONISASI KOLOM STATUS & VERIFIKASI
+        'activation_token', 
+        'email_verified_at',
+        'status_akun', // DITAMBAHKAN
+        'verification_date', // DITAMBAHKAN
     ];
 
     protected $hidden = [
@@ -33,9 +43,26 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public function getEmailAttribute()
+    {
+        return $this->email_pic;
+    }
+
+    public function username()
+    {
+        return 'email_pic';
+    }
+
+    public function getEmailForVerification()
+    {
+        return $this->email_pic;
+    }
+
+
     protected function casts(): array
     {
         return [
+            'email_verified_at' => 'datetime', 
             'password' => 'hashed',
         ];
     }

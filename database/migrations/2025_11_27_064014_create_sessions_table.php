@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Membuat tabel sessions yang diperlukan Laravel untuk menyimpan data sesi
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
             $table->foreignId('user_id')->nullable()->index();
@@ -26,6 +27,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        // Kode ini akan menghapus tabel 'sessions' saat rollback
         Schema::dropIfExists('sessions');
     }
 };
