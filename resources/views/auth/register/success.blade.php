@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Pendaftaran Berhasil - QuadMarket</title>
+    <title>Pendaftaran Berhasil | QuadMarket</title>
 
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 
@@ -46,7 +46,7 @@
         <div class="flex-grow w-full max-w-7xl mx-auto p-4 sm:p-8 lg:p-12">
 
             <div
-                class="flex flex-col items-center justify-center bg-white dark:bg-background-dark rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 min-h-[80vh] p-8 text-center">
+                class="flex flex-col items-center justify-center bg-white dark:bg-background-dark rounded-xl border border-gray-200 dark:border-gray-700 min-h-[80vh] p-8 text-center">
                 
                 <div class="mb-8">
                 <img src="{{ asset('assets/quadmarket-logo.png') }}" 
@@ -67,7 +67,7 @@
                     Verifikasi biasanya memakan waktu 1 - 2 hari kerja.
                 </p>
 
-                <a href="{{ route('home') }}"
+                <a href="{{ route('login.login') }}"
                     class="inline-flex items-center justify-center bg-primary text-white font-bold py-3 px-8 rounded-lg hover:bg-opacity-90 focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-primary dark:focus:ring-offset-background-dark transition-colors duration-300 h-14 shadow-md hover:shadow-lg">
                     Masuk
                 </a>

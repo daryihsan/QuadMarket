@@ -1,19 +1,23 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
     public function create()
     {
         $categories = Category::all();
-        return view('seller.product.create', compact('categories'));
+        return view('seller.products.create', compact('categories'));
     }
 
+    /**
+     * Simpan data produk baru (Route: seller.products.store).
+     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -35,5 +39,99 @@ class ProductController extends Controller
         Product::create($validated);
 
         return redirect()->back()->with('success', 'Produk berhasil ditambahkan!');
+        $validatedData = $request->validate([
+            'name'        => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'price'       => 'required|numeric|min:0',
+            'stock'       => 'required|integer|min:0',
+            'category_id' => 'required|exists:categories,id',
+            'condition'   => 'required|in:baru,bekas',
+            'min_order'   => 'required|integer|min:1',
+            'foto_produk' => 'nullable|image|max:5120', 
+        ]);
+
+        $productData = $validatedData;
+        $productData['user_id'] = Auth::id();
+        $productData['status'] = $validatedData['stock'] > 0 ? 'Aktif' : 'NonAktif'; 
+        $productData['rating'] = 0; 
+        $productData['total_ulasan'] = 0; 
+
+        // Upload Foto Produk
+        if ($request->hasFile('foto_produk')) {
+            $fotoPath = $request->file('foto_produk')->store('public/product_images'); 
+            $productData['image_path'] = Storage::url($fotoPath); 
+        } else {
+            $productData['image_path'] = null;
+        }
+
+        unset($productData['foto_produk']); 
+
+        Product::create($productData); 
+
+        return redirect()->route('seller.dashboard', ['tab' => 'products'])
+                         ->with('success', 'Produk berhasil ditambahkan dan gambar berhasil diunggah!');
+    }
+    
+    /**
+     * Update produk yang sudah ada (Route: seller.products.update).
+     */
+    public function update(Request $request, Product $product)
+    {
+        // Model binding menjamin $product adalah instance Product
+        if ($product->user_id !== Auth::id()) {
+            return redirect()->back()->with('error', 'Anda tidak berhak mengedit produk ini.');
+        }
+        
+        $validatedData = $request->validate([
+            'name'        => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'price'       => 'required|numeric|min:0',
+            'stock'       => 'required|integer|min:0',
+            'category_id' => 'required|exists:categories,id',
+            'condition'   => 'required|in:baru,bekas',
+            'min_order'   => 'required|integer|min:1',
+            'foto_produk' => 'nullable|image|max:5120',
+        ]);
+        
+        $productData = $validatedData;
+        $productData['status'] = $validatedData['stock'] > 0 ? 'Aktif' : 'NonAktif';
+
+        if ($request->hasFile('foto_produk')) {
+            // Hapus gambar lama
+            if ($product->image_path) {
+                $oldPath = str_replace(config('app.url') . '/storage', 'public', $product->image_path);
+                Storage::delete($oldPath);
+            }
+            $fotoPath = $request->file('foto_produk')->store('public/product_images');
+            $productData['image_path'] = Storage::url($fotoPath);
+        }
+
+        unset($productData['foto_produk']);
+
+        $product->update($productData);
+
+        return redirect()->route('seller.dashboard', ['tab' => 'products'])
+                         ->with('success', 'Produk berhasil diperbarui.');
+    }
+
+    /**
+     * Hapus produk (Route: seller.products.destroy).
+     */
+    public function destroy(Product $product)
+    {
+        if ($product->user_id !== Auth::id()) {
+            return redirect()->back()->with('error', 'Anda tidak berhak menghapus produk ini.');
+        }
+        
+        // Hapus gambar dari storage
+        if ($product->image_path) {
+            $path = str_replace(config('app.url') . '/storage', 'public', $product->image_path);
+            Storage::delete($path);
+        }
+
+        $product->delete();
+
+        return redirect()->route('seller.dashboard', ['tab' => 'products'])
+                         ->with('success', 'Produk berhasil dihapus.');
     }
 }
