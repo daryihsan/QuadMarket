@@ -8,14 +8,13 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    // halaman pilih login
+    // pilih login
     public function showPilih()
     {
         return view('auth.login.pilih');
     }
 
-    // ================= USER LOGIN ===================
-
+    // login penjual
     public function showLogin()
     {
         return view('auth.login.login');
@@ -24,23 +23,22 @@ class LoginController extends Controller
     public function processLogin(Request $request)
     {
         $request->validate([
-            'email_pic' => 'required|email',
+            'email_pic' => 'required',
             'password' => 'required'
         ]);
-
-        if (Auth::attempt([
-            'email_pic' => $request->email_pic,
+        $user = User::where('email_pic', $request->email_pic)
+                    ->orWhere('nama_toko', $request->email_pic)
+                    ->first();
+        if ($user && Auth::attempt([
+            'email_pic' => $user->email_pic,
             'password' => $request->password
         ])) {
-            return redirect()->intended('/dashboard-user')->with('success','Login berhasil!');
+            return redirect()->route('seller.dashboard');
         }
-
-        return back()->withErrors(['email_pic' => 'Email atau password salah']);
+        return back()->withErrors(['email_pic' => 'Email/nama toko atau password salah']);
     }
 
-
-    // ================= ADMIN LOGIN ===================
-
+    // login admin (pake seeders tp blm diset)
     public function showAdmin()
     {
         return view('auth.login.admin');
@@ -52,13 +50,12 @@ class LoginController extends Controller
             'username' => 'required',
             'password' => 'required'
         ]);
-
         if (
             $request->username === env('ADMIN_USER') &&
             $request->password === env('ADMIN_PASS')
         ) {
             session(['is_admin' => true]);
-            return redirect('/dashboard-admin')->with('success','Login admin berhasil!');
+            return redirect()->route('platform.dashboard')->with('success','Login admin berhasil!');
         }
 
         return back()->withErrors(['username' => 'Username atau password admin salah']);

@@ -1,5 +1,5 @@
 <?php
-
+// ini buat apa??????????
 namespace App\Http\Controllers;
 
 abstract class Controller

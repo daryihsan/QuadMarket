@@ -11,10 +11,6 @@ use Illuminate\Support\Facades\Auth;
 
 class SellerController extends Controller
 {
-    /**
-     * Menampilkan Dashboard Penjual dan mengurus semua logika navigasi.
-     * Route: seller.dashboard
-     */
     public function dashboard(Request $request)
     {
         // LOGIKA DEBUGGING: Menggunakan ID 1 jika tidak ada user yang login

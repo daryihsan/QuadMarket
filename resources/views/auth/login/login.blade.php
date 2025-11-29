@@ -67,8 +67,8 @@
                     </label>
                     <input 
                         type="text"
-                        name="email"
-                        id="email"
+                        name="email_pic"
+                        id="email_pic"
                         placeholder="Masukkan email atau nama toko Anda"
                         required
                         class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-quad-light-blue focus:border-quad-light-blue sm:text-base"

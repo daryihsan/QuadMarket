@@ -26,7 +26,6 @@
 
         <!-- LEFT SIDE -->
         <div class="hidden lg:flex w-1/2 bg-quad-dark-blue p-16 flex-col justify-center items-start text-white">
-            
             <!-- Logo -->
             <div class="flex items-center">
                 <img 

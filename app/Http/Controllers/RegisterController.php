@@ -16,7 +16,6 @@ class RegisterController extends Controller
         return view('auth.register.step1');
     }
 
-    // step 1 data input
     public function processStep1(Request $request)
     {
         $validated = $request->validate([
@@ -28,24 +27,21 @@ class RegisterController extends Controller
             'email_pic' => 'required|email|unique:users,email_pic',
 
         ]);
-
         $request->session()->put('registration_data', $validated);
 
         return redirect()->route('register.step2');
     }
 
-    // step 2 form 
+    // step 2
     public function showStep2(Request $request)
     {
         if (!$request->session()->has('registration_data')) {
             return redirect()->route('register.step1')
                              ->with('error', 'Silakan isi langkah 1 terlebih dahulu.');
         }
-
         return view('auth.register.step2');
     }
 
-    // proses data
     public function processStep2(Request $request)
     {
         $validated = $request->validate([
@@ -61,13 +57,12 @@ class RegisterController extends Controller
             $request->session()->get('registration_data'),
             $validated
         );
-
         $request->session()->put('registration_data', $merged);
 
         return redirect()->route('register.step3');
     }
 
-    // step 3 pass
+    // step 3
     public function showStep3(Request $request)
     {
         if (!$request->session()->has('registration_data')) {
@@ -77,7 +72,6 @@ class RegisterController extends Controller
         return view('auth.register.step3');
     }
 
-    // step 3 proses & register
     public function processStep3(Request $request)
     {
         if (!$request->session()->has('registration_data')) {
@@ -86,7 +80,6 @@ class RegisterController extends Controller
         }
 
         $validated = $request->validate([
-            // NIK harus 16 digit dan unik di database user
             'nik'          => ['required', 'string', 'digits:16', Rule::unique('users', 'nik')], 
             'password'     => 'required|min:8|confirmed',
             // Validasi untuk file: gambar, maks 5MB
@@ -124,8 +117,7 @@ class RegisterController extends Controller
             ]
         );
 
-        // 3. Simpan ke database
-        // Catatan: Pastikan model User Anda memiliki semua field ini di $fillable
+        // simpan ke db (samain sm model User)
         User::create([
             'nama_toko'  => $finalData['nama_toko'],
             'deskripsi'  => $finalData['deskripsi'] ?? null,
@@ -146,14 +138,13 @@ class RegisterController extends Controller
             'is_verified' => $finalData['is_verified'],
         ]);
 
-        // 4. Bersihkan session
+        // bersihkan session
         $request->session()->forget('registration_data');
         
-        // 5. Arahkan ke halaman sukses
         return redirect()->route('register.success'); 
     }
     
-    // Fungsi baru untuk menampilkan halaman sukses
+    // pendaftaran berhasil
     public function showSuccess()
     {
         return view('auth.register.success');

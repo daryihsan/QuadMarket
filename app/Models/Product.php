@@ -3,48 +3,39 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory; // Tambahkan ini jika Anda menggunakan factory
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Product extends Model
 {
-    protected $fillable = [
-        'name', 'description', 'price', 'category', 'location',
-        'store_name', 'rating', 'reviews_count', 'image'
-    ];
-}
-    // Tambahkan HasFactory jika Anda berencana menggunakannya
-    use HasFactory; 
+    use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     * Termasuk semua field yang diinputkan dari form.
-     */
     protected $fillable = [
-        'user_id', // Foreign key ke penjual
-        'category_id', // Foreign key ke kategori
+        'user_id',        // Foreign key ke penjual
+        'category_id',    // Foreign key ke kategori
         'name',
         'description',
         'price',
         'stock',
         'condition',
         'min_order',
-        'status', // Opsional, jika Anda set status default di database
-        // Tambahkan path gambar jika Anda menyimpannya di database
-        'image_path',
+        'status',         // Opsional
+        'image_path',     // Path gambar
         'rating',
         'total_ulasan'
-        // Tambahkan field lain jika ada (seperti kondisi, dll)
+        // Tambahkan field lain jika ada
     ];
 
     /**
-     * Definisikan relasi ke Kategori
+     * Relasi ke kategori
      */
     public function category()
     {
         return $this->belongsTo(Category::class);
     }
-    
-    // Anda juga bisa menambahkan relasi ke User (Penjual) di sini jika perlu
+
+    /**
+     * Relasi ke user (penjual)
+     */
     public function user()
     {
         return $this->belongsTo(User::class);
