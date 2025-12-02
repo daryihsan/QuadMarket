@@ -22,9 +22,9 @@
 
         <main class="flex-1 p-8">
             <div class="flex justify-between items-center mb-6">
-                <h1 class="text-2xl font-bold text-blue-900">Verifikasi Penjual: {{ $seller->nama_toko }}</h1>
-                <a href="{{ route('platform.verifikasi.list') }}" class="text-sm font-medium text-gray-600 hover:text-gray-800">&larr; Kembali ke Daftar</a>
-            </div>
+            <h1 class="text-2xl font-bold text-blue-900">Verifikasi Penjual: {{ $seller->nama_toko }}</h1>
+            <img src="{{ asset('assets/images/quadmarket-logo.png') }}" class="h-12" alt="QuadMarket">
+        </div>
 
             <div class="bg-white rounded-lg shadow p-6 mb-6">
                 <h2 class="text-xl font-semibold text-gray-800 mb-4 border-b pb-2">Data Registrasi Penjual (toko) [cite: 30]</h2>

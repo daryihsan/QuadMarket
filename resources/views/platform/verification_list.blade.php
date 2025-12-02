@@ -50,6 +50,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                     </svg>
                     <span>Verifikasi Penjual</span>
+                </a>
             </nav>
 
             <!-- Bottom Menu -->
@@ -79,6 +80,7 @@
         <main class="flex-1 p-8">
             <div class="flex justify-between items-center mb-8">
                 <h1 class="text-2xl font-bold text-blue-900">Antrian Verifikasi Penjual</h1>
+                <img src="{{ url('assets/images/logo.png') }}" alt="QuadMarket" class="h-20">
             </div>
 
             <div class="bg-white rounded-lg shadow p-6">

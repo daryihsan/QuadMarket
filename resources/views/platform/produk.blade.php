@@ -39,6 +39,12 @@
                     </svg>
                     <span class="font-medium">Laporan</span>
                 </a>
+                <a href="{{ route('platform.verifikasi.list') }}" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span>Verifikasi Penjual</span>
+                </a>
             </nav>
 
             <!-- Bottom Menu -->
@@ -56,6 +62,12 @@
                     </svg>
                     <span>Bantuan</span>
                 </a>
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-gray-50 rounded-lg">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    <span>Keluar</span>
+                </a>
             </div>
         </aside>
 
@@ -66,7 +78,7 @@
                 <div>
                     <h1 class="text-2xl font-bold text-blue-900">Dashboard Laporan</h1>
                 </div>
-                <img src="https://via.placeholder.com/120x40/00BFFF/FFFFFF?text=QuadMarket" alt="QuadMarket" class="h-10">
+                <img src="{{ url('assets/images/logo.png') }}" alt="QuadMarket" class="h-20">
             </div>
 
             <!-- Tabs -->
