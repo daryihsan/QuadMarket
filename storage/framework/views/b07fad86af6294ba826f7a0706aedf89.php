@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $currentCategory ?? 'Katalog Produk' }} - Katalog Pembeli QuadMarket</title> 
+    <title><?php echo e($currentCategory ?? 'Katalog Produk'); ?> - Katalog Pembeli QuadMarket</title> 
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,7 +31,7 @@
     <header class="bg-white shadow-sm sticky top-0 z-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
             <div class="flex items-center space-x-2">
-                <img src="{{ asset('assets/quadmarket-logo.png') }}" 
+                <img src="<?php echo e(asset('assets/quadmarket-logo.png')); ?>" 
                     alt="QuadMarket Logo" 
                     class="w-29 h-20 mr-0 ml-0">
             </div>
@@ -57,44 +57,45 @@
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
         <p class="text-sm text-gray-500 mb-6">
-            Home / {{ $currentCategory ?? 'Semua Kategori' }}
+            Home / <?php echo e($currentCategory ?? 'Semua Kategori'); ?>
+
         </p>
         <div class="flex flex-col lg:flex-row gap-8">
             
             <div class="w-full lg:w-72 bg-white p-6 rounded-lg shadow-lg flex-shrink-0">
                 <h2 class="text-xl font-bold text-gray-800 mb-6 border-b pb-3">Filter</h2>
-                <form method="GET" action="{{ route('katalog') }}" class="space-y-6">
+                <form method="GET" action="<?php echo e(route('katalog')); ?>" class="space-y-6">
                     
                     <div>
                         <h3 class="font-semibold text-gray-700 mb-3">Kategori</h3>
                         <div class="space-y-2 text-sm text-gray-600">
-                            @php
+                            <?php
                                 $categories = ['Elektronik', 'Fashion Pria', 'Fashion Wanita', 'Kebutuhan Rumah'];
-                            @endphp
-                            @foreach ($categories as $cat)
+                            ?>
+                            <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $cat): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <label class="flex items-center space-x-2">
-                                    <input type="radio" name="kategori" value="{{ $cat }}" 
-                                        {{ ($filters['kategori'] ?? 'Elektronik') === $cat ? 'checked' : '' }} 
+                                    <input type="radio" name="kategori" value="<?php echo e($cat); ?>" 
+                                        <?php echo e(($filters['kategori'] ?? 'Elektronik') === $cat ? 'checked' : ''); ?> 
                                         class="form-radio text-blue-600 rounded">
-                                    <span>{{ $cat }}</span>
+                                    <span><?php echo e($cat); ?></span>
                                 </label>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </div>
                     </div>
                     <div class="pt-4 border-t border-gray-200">
                         <h3 class="font-semibold text-gray-700 mb-3">Lokasi</h3>
                         <div class="space-y-2 text-sm text-gray-600">
-                            @php
+                            <?php
                                 $locations = ['Jakarta', 'Surabaya', 'Bandung', 'Semarang'];
-                            @endphp
-                            @foreach ($locations as $loc)
+                            ?>
+                            <?php $__currentLoopData = $locations; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $loc): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <label class="flex items-center space-x-2">
-                                    <input type="checkbox" name="lokasi" value="{{ $loc }}" 
-                                        {{ ($filters['lokasi'] ?? '') === $loc ? 'checked' : '' }} 
+                                    <input type="checkbox" name="lokasi" value="<?php echo e($loc); ?>" 
+                                        <?php echo e(($filters['lokasi'] ?? '') === $loc ? 'checked' : ''); ?> 
                                         class="form-checkbox text-blue-600 rounded">
-                                    <span>{{ $loc }}</span>
+                                    <span><?php echo e($loc); ?></span>
                                 </label>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </div>
                     </div>
                     
@@ -102,10 +103,10 @@
                         <h3 class="font-semibold text-gray-700 mb-3">Rentang Harga</h3>
                         <div class="flex space-x-2 text-xs">
                             <input type="number" name="harga_min" placeholder="Harga Minimum" 
-                                value="{{ $filters['harga_min'] ?? 0 }}"
+                                value="<?php echo e($filters['harga_min'] ?? 0); ?>"
                                 class="w-1/2 border border-gray-300 rounded-lg p-2 text-gray-700 text-center focus:ring-blue-600 focus:border-blue-600">
                             <input type="number" name="harga_max" placeholder="Harga Maksimum" 
-                                value="{{ $filters['harga_max'] ?? 50000000 }}"
+                                value="<?php echo e($filters['harga_max'] ?? 50000000); ?>"
                                 class="w-1/2 border border-gray-300 rounded-lg p-2 text-gray-700 text-center focus:ring-blue-600 focus:border-blue-600">
                         </div>
                     </div>
@@ -113,7 +114,8 @@
                         <h3 class="font-semibold text-gray-700 mb-3">Rating</h3>
                         <label class="flex items-center space-x-2 text-sm text-gray-600">
                             <input type="checkbox" name="rating" value="4" 
-                                {{ ($filters['rating'] ?? '') == 4 ? 'checked' : '' }}
+                                <?php echo e(($filters['rating'] ?? '') == 4 ? 'checked' : ''); ?>
+
                                 class="form-checkbox text-blue-600 rounded">
                             <span class="text-yellow-500"> ⭐ </span>
                             <span>4 ke atas</span>
@@ -124,7 +126,7 @@
                             class="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition duration-150 shadow-md">
                                 Terapkan Filter
                         </button>
-                        <a href="{{ route('katalog') }}"
+                        <a href="<?php echo e(route('katalog')); ?>"
                             class="block w-full text-center bg-gray-200 text-gray-700 font-semibold py-3 rounded-lg hover:bg-gray-300 transition duration-150">
                             Reset Filter
                         </a>
@@ -133,48 +135,53 @@
             </div>
             <div class="flex-grow">
                 <div class="mb-6">
-                    <h1 class="text-3xl font-bold text-gray-900">{{ $currentCategory ?? 'Semua Produk' }}</h1>
-                    <p class="text-gray-500 text-sm">Menampilkan {{ number_format($totalProducts, 0, ',', '.') }} produk</p>
+                    <h1 class="text-3xl font-bold text-gray-900"><?php echo e($currentCategory ?? 'Semua Produk'); ?></h1>
+                    <p class="text-gray-500 text-sm">Menampilkan <?php echo e(number_format($totalProducts, 0, ',', '.')); ?> produk</p>
                 </div>
-                {{-- Daftar Produk --}}
+                
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
-                    @foreach ($products as $product)
-                        <a href="{{ route('product.detail', ['id' => $product->id]) }}" class="bg-white rounded-lg shadow hover:shadow-lg transition border border-gray-100 overflow-hidden product-card">
-                            {{-- Gambar Produk --}}
-                            @if ($product->image_path)
-                                <img src="{{ $product->image_path }}" class="w-full h-40 object-cover" alt="{{ $product->name }}">
-                            @else
+                    <?php $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <a href="<?php echo e(route('product.detail', ['id' => $product->id])); ?>" class="bg-white rounded-lg shadow hover:shadow-lg transition border border-gray-100 overflow-hidden product-card">
+                            
+                            <?php if($product->image_path): ?>
+                                <img src="<?php echo e($product->image_path); ?>" class="w-full h-40 object-cover" alt="<?php echo e($product->name); ?>">
+                            <?php else: ?>
                                 <div class="w-full h-40 bg-gray-200 flex items-center justify-center text-gray-500">
                                     Tidak ada gambar
                                 </div>
-                            @endif
-                            {{-- Konten --}}
+                            <?php endif; ?>
+                            
                             <div class="p-3">
                                 <p class="text-sm font-medium text-gray-800 truncate mb-1">
-                                    {{ $product->name }}
+                                    <?php echo e($product->name); ?>
+
                                 </p>
                                 <p class="text-xl font-bold text-gray-900 mb-1">
-                                    Rp {{ number_format($product->price, 0, ',', '.') }}
+                                    Rp <?php echo e(number_format($product->price, 0, ',', '.')); ?>
+
                                 </p>
                                 <p class="text-xs text-gray-500 mb-2">
-                                    {{ $product->user->nama_toko ?? 'N/A' }} • {{ $product->user->kabupaten ?? 'N/A' }}
+                                    <?php echo e($product->user->nama_toko ?? 'N/A'); ?> • <?php echo e($product->user->kabupaten ?? 'N/A'); ?>
+
                                 </p>
-                                {{-- Rating --}}
+                                
                                 <div class="flex items-center text-xs">
-                                    <span class="font-semibold text-yellow-500 mr-1"> ⭐  {{ number_format($product->rating, 1) }}</span>
+                                    <span class="font-semibold text-yellow-500 mr-1"> ⭐  <?php echo e(number_format($product->rating, 1)); ?></span>
                                     <span class="text-gray-500">
-                                        ({{ number_format($product->total_ulasan, 0, ',', '.') }})
+                                        (<?php echo e(number_format($product->total_ulasan, 0, ',', '.')); ?>)
                                     </span>
                                 </div>
                             </div>
                         </a>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
                 <div class="mt-6">
-                    {{ $products->links() }}
+                    <?php echo e($products->links()); ?>
+
                 </div>
                 <div class="mt-8 flex justify-center lg:justify-end">
-                    {{ $products->links() }}
+                    <?php echo e($products->links()); ?>
+
                 </div>
             </div>
         </div>
@@ -185,4 +192,4 @@
         </div>
     </footer>
 </body>
-</html>
+</html><?php /**PATH C:\xampp\htdocs\PPL QUADMARKET\QuadMarket\resources\views/katalog.blade.php ENDPATH**/ ?>

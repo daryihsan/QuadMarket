@@ -1,4 +1,8 @@
 @php
+$user = auth()->user();
+$storeName    = $user->nama_toko ?? 'Nama Toko';
+$storeInitial = mb_substr($storeName, 0, 1, 'UTF-8'); 
+$storeCity    = $user->kabupaten ?? 'Semarang'; 
 // Ambil data dari array $data yang dikirim dari controller
 $activeTab = request()->query('tab', 'overview');
 // Dashboard Data
@@ -7,12 +11,47 @@ $totalProducts = $data['totalProducts'] ?? 0;
 //$salesThisMonth = $data['salesThisMonth'] ?? 'Rp 0';
 //$newOrders = $data['newOrders'] ?? 0;
 $averageRating = $data['averageRating'] ?? 0;
-$salesByCategory = $data['salesByCategory'] ?? [];
+$productCountsByCategory = []; 
+
+// Ambil semua produk milik user yang sedang login, beserta kategorinya
+// ASUMSI: Anda punya relasi 'category' di Model Product, dan Model Product berada di App\Models\Product
+$sellerProducts = \App\Models\Product::where('user_id', $user->id)
+    ->with('category') // Eager load relasi category untuk efisiensi
+    ->get();
+
+// Hitung total stok per kategori
+foreach ($sellerProducts as $product) {
+    // Pastikan produk memiliki kategori sebelum diakses
+    $categoryName = $product->category->name ?? 'Lain-lain';
+    
+    if (!isset($productCountsByCategory[$categoryName])) {
+        $productCountsByCategory[$categoryName] = 0;
+    }
+    // Tambahkan stok ke total kategori
+    $productCountsByCategory[$categoryName] += $product->stock;
+}
+
+// Konversi ke format array objek yang dibutuhkan oleh chart JS ($salesByCategory)
+$stockByCategoryForChart = [];
+foreach ($productCountsByCategory as $name => $stock) {
+    // Meskipun nama variabelnya 'Penjualan', nilainya kini adalah STOK
+    $stockByCategoryForChart[] = (object) [
+        'Kategori' => $name,
+        'Penjualan' => $stock // Nilai sebenarnya adalah STOK
+    ];
+}
+
+// Mengganti variabel dummy $salesByCategory dengan data stok nyata
+$salesByCategory = $stockByCategoryForChart;
+// =========================================================
+
 $locationData = $data['locationData'] ?? ['TotalOrders' => 0, 0 => ['Lokasi' => 'N/A', 'Persentase' => 0], 1 => ['Lokasi' => 'N/A', 'Persentase' => 0], 2 => ['Lokasi' => 'N/A', 'Persentase' => 0]];
 $latestProducts = $data['latestProducts'] ?? collect([]);
+
 // Product Data
 $productStats = $data['productStats'] ?? [
-    'total_produk' => 0, 'produk_aktif' => 0, 'stok_habis' => 0, 'tidak_aktif' => 0
+    // Baris 50:
+    'total_produk' => 0, 'produk_aktif' => 0, 'stok_habis' => 0, 'tidak_aktif' => 0 // <-- PASTIKAN TIDAK ADA KOMA SETELAH 0
 ];
 $products = $data['products'] ?? collect([]);
 $allCategories = $data['allCategories'] ?? collect([]);
@@ -23,14 +62,11 @@ $editProduct = $data['editProduct'] ?? null;
 // HANYA menyertakan Total Produk dan Rating Rata-Rata
 $summaryData = [
     (object)['title' => 'Total Produk', 'value' => number_format($totalProducts), 'class' => 'text-blue-600'],
-    // Entri 'Penjualan Bulan Ini' dihapus
-    // Entri 'Pesanan Baru' dihapus
-    (object)['title' => 'Rating Rata-Rata', 'value' => number_format($averageRating, 1), 'class' => 'text-red-500'],
+    (object)['title' => 'Rating Rata-Rata', 'value' => number_format($averageRating, 1), 'class' => 'text-red-500'],    
 ];
-$user = auth()->user();
-$storeName    = $user->nama_toko ?? 'Nama Toko';
-$storeInitial = mb_substr($storeName, 0, 1, 'UTF-8'); 
-$storeCity    = $user->kabupaten ?? 'Semarang';    
+
+
+   
 @endphp
 <!DOCTYPE html>
 <html lang="id">

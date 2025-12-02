@@ -15,17 +15,20 @@ use Illuminate\Support\Facades\Route;
 
 // PENGUNJUNG--------------------------------------------------------------------------
 // homepage
-Route::get('/', action: function () {
-    return view('home');
-});
+// Route::get('/', action: function () {
+//     return view('home');
+// });
+Route::get('/', [CatalogController::class, 'home'])->name('home'); // DIPERBARUI
 
 // katalog produk
 Route::get('/katalog', [CatalogController::class, 'index'])->name('katalog');
 
 // detail produk
-Route::get('/product/detail', function () {
-    return view('products.detail');
-});
+Route::get('/product/{id}/detail', function ($id) {
+    // Simulasi pengambilan produk menggunakan ID (gunakan Product::findOrFail($id) di controller jika sudah ada)
+    // Saat ini hanya mengembalikan view, tapi route name sudah terpasang
+    return view('products.detail', compact('id'));
+})->name('product.detail');
 
 // PENJUAL--------------------------------------------------------------------------
 // regist
