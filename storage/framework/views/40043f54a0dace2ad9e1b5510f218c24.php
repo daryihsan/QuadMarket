@@ -3,6 +3,12 @@
 $activeReportTab = $activeReportTab ?? 'rating';
 $categories = $categories ?? collect([]);
 $reportData = $reportData ?? collect([]);
+
+// DATA TOKO DARI USER LOGIN (sama logika dengan dashboard)
+$user = auth()->user();
+$storeName    = $user->nama_toko ?? 'Nama Toko';
+$storeInitial = mb_substr($storeName, 0, 1, 'UTF-8');
+$storeCity    = $user->kabupaten ?? 'Semarang';
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -21,13 +27,13 @@ $reportData = $reportData ?? collect([]);
         }
         body { background-color: var(--background-color); color: var(--text-color); font-family: 'Inter', sans-serif; }
         .dashboard-container { display: flex; min-height: 100vh; }
-        .sidebar { /* Gaya sidebar sama seperti dashboard.blade.php */ 
+        .sidebar { 
             width: 250px; 
             background-color: var(--card-background); 
             padding: 20px; 
             display: flex; 
-            flex-direction: column; /* Atur arah flex column */
-            justify-content: space-between; /* Untuk memisahkan konten atas dan bawah */
+            flex-direction: column; 
+            justify-content: space-between; 
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.05); 
             flex-shrink: 0; 
         }
@@ -41,7 +47,6 @@ $reportData = $reportData ?? collect([]);
         .status-hampir-habis { background-color: #fff3cd; color: #856404; }
         .status-habis { background-color: #f8d7da; color: var(--inactive-status); }
         .action-icon:hover { color: var(--primary-color); }
-        /* Style untuk logo di sidebar agar konsisten */
         .logo-section { display: flex; align-items: center; padding-bottom: 30px; border-bottom: 1px solid var(--border-color); }
         .logo-icon { width: 30px; height: 30px; background-color: var(--primary-color); color: white; display: flex; align-items: center; justify-content: center; border-radius: 5px; font-weight: bold; margin-right: 10px; }
         .settings-nav .nav-link { transition: all 0.2s; }
@@ -54,10 +59,13 @@ $reportData = $reportData ?? collect([]);
         <aside class="sidebar">
             <div> 
                 <div class="logo-section mb-10">
-                    <div class="logo-icon">T</div>
+                    <div class="logo-icon">
+                        <?php echo e($storeInitial); ?>
+
+                    </div>
                     <div class="logo-text">
-                        <strong class="text-lg">Totem</strong>
-                        <span class="block text-xs text-gray-500">Semarang</span>
+                        <strong class="text-lg"><?php echo e($storeName); ?></strong>
+                        <span class="block text-xs text-gray-500"><?php echo e($storeCity); ?></span>
                     </div>
                 </div>
                 <nav class="main-nav">
@@ -118,7 +126,7 @@ $reportData = $reportData ?? collect([]);
                     </p>
                 </div>
                 
-                <a href="<?php echo e(route('seller.reports.download', ['type' => $activeReportTab])); ?>" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg flex items-center transition">
+                <a href="<?php echo e(route('seller.reports.download', array_merge(request()->all(), ['type' => $activeReportTab]))); ?>" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg flex items-center transition">
                     <i class="fas fa-download mr-2"></i> Unduh PDF
                 </a>
             </header>
@@ -304,6 +312,7 @@ $reportData = $reportData ?? collect([]);
                         </tbody>
                     </table>
                 <?php endif; ?>
+
                 <div class="table-footer flex justify-between items-center p-4 border-t border-gray-200">
                     <div>Menampilkan <?php echo e($reportData->firstItem() ?? 0); ?> sampai <?php echo e($reportData->lastItem() ?? 0); ?> dari <?php echo e($reportData->total()); ?> hasil</div>
                     <?php echo e($reportData->appends(request()->except('page'))->links()); ?>
@@ -324,8 +333,10 @@ $reportData = $reportData ?? collect([]);
             
             if (confirm('Yakin ingin menghapus produk ini?')) {
                 const form = document.getElementById('delete-form');
-                form.action = finalRouteUrl;
-                form.submit();
+                if (form) {
+                    form.action = finalRouteUrl;
+                    form.submit();
+                }
             }
         }
     </script>

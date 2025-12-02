@@ -3,15 +3,17 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\LoginController;
+use  App\Http\Controllers\VerificationController;
 use App\Http\Controllers\PlatformController;
 use App\Http\Controllers\SellerDashboardController;
 use App\Http\Controllers\SellerController;
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\VerificationController;
-use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CategoryController;
+use App\Models\Category;
+
 
 // PENGUNJUNG--------------------------------------------------------------------------
 // homepage
@@ -33,17 +35,17 @@ Route::get('/product/{id}/detail', function ($id) {
 // PENJUAL--------------------------------------------------------------------------
 // regist
 Route::prefix('register')->name('register.')->group(function () {
-    Route::get('/step1', [RegisterController::class, 'showStep1']) ->name('step1');
-    Route::post('/step1', [RegisterController::class, 'processStep1']) ->name('step1.post');
+    Route::get('/step1', [RegisterController::class, 'showStep1'])->name('step1');
+    Route::post('/step1', [RegisterController::class, 'processStep1'])->name('step1.post');
 
-    Route::get('/step2', [RegisterController::class, 'showStep2']) ->name('step2');
-    Route::post('/step2', [RegisterController::class, 'processStep2']) ->name('step2.post');
+    Route::get('/step2', [RegisterController::class, 'showStep2'])->name('step2');
+    Route::post('/step2', [RegisterController::class, 'processStep2'])->name('step2.post');
 
-    Route::get('/step3', [RegisterController::class, 'showStep3']) ->name('step3');
-    Route::post('/step3', [RegisterController::class, 'processStep3']) ->name('step3.post');
+    Route::get('/step3', [RegisterController::class, 'showStep3'])->name('step3');
+    Route::post('/step3', [RegisterController::class, 'processStep3'])->name('step3.post');
 
     // pendaftaran berhasil
-    Route::get('/success', [RegisterController::class, 'showSuccess']) ->name('success');
+    Route::get('/success', [RegisterController::class, 'showSuccess'])->name('success');
 });
 
 // verif email
@@ -65,7 +67,7 @@ Route::prefix('login')->group(function () {
 // ini ga pake middleware biar bisa logout
 Route::prefix('seller')->name('seller.')->group(function () {
     // dashboard
-    Route::get('/dashboard', [SellerController::class, 'dashboard']) ->name('dashboard');
+    Route::get('/dashboard', [SellerController::class, 'dashboard'])->name('dashboard');
 
     // CRUD produk
     Route::get('/products', [SellerController::class, 'listProducts'])->name('products.index');
@@ -89,7 +91,7 @@ Route::prefix('seller')->name('seller.')->group(function () {
 
 // middleware auth login penjual (harus login baru bisa akses dashboard)
 Route::middleware('auth')->prefix('seller')->name('seller.')->group(function () {
-    Route::get('/dashboard', [SellerController::class, 'dashboard']) ->name('dashboard');
+    Route::get('/dashboard', [SellerController::class, 'dashboard'])->name('dashboard');
 });
 
 // logout
@@ -132,6 +134,14 @@ Route::prefix('platform')->name('platform.')->group(function () {
         Route::delete('/{category}', [CategoryController::class, 'destroy'])->name('destroy');
     });
 });
+
+Route::get('/seller/reports', [ReportController::class, 'index'])
+    ->name('seller.reports.index')
+    ->middleware('auth');
+
+Route::get('/seller/reports/download', [ReportController::class, 'downloadPdf'])
+    ->name('seller.reports.download')
+    ->middleware('auth');
 
 // DRAFT!!!!!
 // Route::get('/home', function () {
