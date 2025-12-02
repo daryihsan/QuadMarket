@@ -1,4 +1,4 @@
-@php
+<?php
 // Ambil data dari array $data yang dikirim dari controller
 $activeTab = request()->query('tab', 'overview');
 // Dashboard Data
@@ -31,7 +31,7 @@ $user = auth()->user();
 $storeName    = $user->nama_toko ?? 'Nama Toko';
 $storeInitial = mb_substr($storeName, 0, 1, 'UTF-8'); 
 $storeCity    = $user->kabupaten ?? 'Semarang';    
-@endphp
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -116,36 +116,39 @@ $storeCity    = $user->kabupaten ?? 'Semarang';
 </head>
 <body>
     <div class="dashboard-container">
-        {{-- SIDEBAR --}}
+        
         <aside class="sidebar">
-            <div> {{-- Container untuk Logo dan Navigasi --}}
+            <div> 
                 <div class="logo-section mb-10">
                     <div class="logo-icon">
-                        {{ $storeInitial }}
+                        <?php echo e($storeInitial); ?>
+
                     </div>
                     <div class="logo-text">
                         <strong class="text-lg">
-                            {{ $storeName }}
+                            <?php echo e($storeName); ?>
+
                         </strong>
                         <span class="block text-xs text-gray-500">
-                            {{ $storeCity }}
+                            <?php echo e($storeCity); ?>
+
                         </span>
                     </div>
                 </div>
                 <nav class="main-nav">
                     <ul>
                         <li class="mb-1">
-                            <a href="{{ route('seller.dashboard', ['tab' => 'overview']) }}" class="nav-link flex items-center p-2 rounded-lg text-gray-700 @if($activeTab === 'overview') active @endif">
+                            <a href="<?php echo e(route('seller.dashboard', ['tab' => 'overview'])); ?>" class="nav-link flex items-center p-2 rounded-lg text-gray-700 <?php if($activeTab === 'overview'): ?> active <?php endif; ?>">
                                 <i class="fas fa-chart-line mr-3 text-lg text-gray-500"></i> Dashboard
                             </a>
                         </li>
                         <li class="mb-1">
-                            <a href="{{ route('seller.dashboard', ['tab' => 'products']) }}" class="nav-link flex items-center p-2 rounded-lg text-gray-700 @if($activeTab === 'products' || $activeTab === 'addProduct') active @endif">
+                            <a href="<?php echo e(route('seller.dashboard', ['tab' => 'products'])); ?>" class="nav-link flex items-center p-2 rounded-lg text-gray-700 <?php if($activeTab === 'products' || $activeTab === 'addProduct'): ?> active <?php endif; ?>">
                                 <i class="fas fa-box-open mr-3 text-lg text-gray-500"></i> Produk
                             </a>
                         </li>
                         <li class="mb-1">
-                            <a href="{{ route('seller.reports.index') }}" class="nav-link flex items-center p-2 rounded-lg text-gray-700 @if(request()->routeIs('seller.reports.index')) active @endif">
+                            <a href="<?php echo e(route('seller.reports.index')); ?>" class="nav-link flex items-center p-2 rounded-lg text-gray-700 <?php if(request()->routeIs('seller.reports.index')): ?> active <?php endif; ?>">
                                 <i class="fas fa-file-alt mr-3 text-lg text-gray-500"></i> Laporan
                             </a>
                         </li>
@@ -153,12 +156,12 @@ $storeCity    = $user->kabupaten ?? 'Semarang';
                 </nav>
             </div>
             
-            {{-- TOMBOL KELUAR - DITEMPATKAN DI LUAR NAV DENGAN PADDING ATAS UNTUK MEMISAHKAN --}}
+            
             <div class="settings-nav pt-4 border-t" style="border-color: var(--border-color);">
                 <ul>
                     <li class="mt-4">
-                        <form action="{{ route('logout') }}" method="POST">
-                            @csrf
+                        <form action="<?php echo e(route('logout')); ?>" method="POST">
+                            <?php echo csrf_field(); ?>
                             <button type="submit" class="w-full text-left nav-link flex items-center p-2 rounded-lg hover:bg-red-50 text-red-600 transition">
                                 <i class="fas fa-sign-out-alt mr-3 text-lg"></i> Keluar
                             </button>
@@ -168,103 +171,104 @@ $storeCity    = $user->kabupaten ?? 'Semarang';
             </div>
         </aside>
 
-        {{-- MAIN CONTENT --}}
+        
         <main class="main-content">
             <header class="header flex justify-between items-start mb-8">
                 <div>
                     <h1 class="text-3xl font-bold text-gray-800">
-                        @if ($activeTab === 'overview')
+                        <?php if($activeTab === 'overview'): ?>
                             Dashboard Toko
-                        @elseif ($activeTab === 'products')
+                        <?php elseif($activeTab === 'products'): ?>
                             Produk Saya
-                        @elseif ($activeTab === 'addProduct')
-                            @if ($editMode) Edit Produk @else Tambah Produk Baru @endif
-                        @endif
+                        <?php elseif($activeTab === 'addProduct'): ?>
+                            <?php if($editMode): ?> Edit Produk <?php else: ?> Tambah Produk Baru <?php endif; ?>
+                        <?php endif; ?>
                     </h1>
                     <p class="text-sm text-gray-500 mt-1">
-                        @if ($activeTab === 'overview')
+                        <?php if($activeTab === 'overview'): ?>
                             Selamat Datang, Totem! Ini ringkasan performa tokomu.
-                        @elseif ($activeTab === 'products')
+                        <?php elseif($activeTab === 'products'): ?>
                             Kelola semua produk yang Anda jual.
-                        @elseif ($activeTab === 'addProduct')
-                            @if ($editMode) Perbarui detail produk @else Lengkapi informasi produk yang akan dijual. @endif
-                        @endif
+                        <?php elseif($activeTab === 'addProduct'): ?>
+                            <?php if($editMode): ?> Perbarui detail produk <?php else: ?> Lengkapi informasi produk yang akan dijual. <?php endif; ?>
+                        <?php endif; ?>
                     </p>
                 </div>
                 <div>
-                    <img src="{{ asset('assets/images/logo.png') }}" alt="Logo QuadMarket" class="h-20"> 
+                    <img src="<?php echo e(asset('assets/images/logo.png')); ?>" alt="Logo QuadMarket" class="h-20"> 
                 </div>
             </header>
 
-            {{-- ALERT MESSAGES --}}
-            @if (session('success'))
+            
+            <?php if(session('success')): ?>
                 <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6" role="alert">
-                    {{ session('success') }}
+                    <?php echo e(session('success')); ?>
+
                 </div>
-            @endif
-            @if ($errors->any())
+            <?php endif; ?>
+            <?php if($errors->any()): ?>
                 <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6" role="alert">
                     <strong class="font-bold">Error!</strong>
                     <span class="block sm:inline">Terdapat kesalahan pada input form:</span>
                     <ul class="mt-2 list-disc list-inside">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
+                        <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <li><?php echo e($error); ?></li>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </ul>
                 </div>
-            @endif
+            <?php endif; ?>
 
-            {{-- 1. OVERVIEW SECTION (DASHBOARD) --}}
-            <section id="overview-content" @if($activeTab !== 'overview') style="display: none;" @endif>
-                {{-- Summary Cards --}}
-                {{-- Menggunakan grid-cols-2 karena hanya ada 2 item tersisa --}}
+            
+            <section id="overview-content" <?php if($activeTab !== 'overview'): ?> style="display: none;" <?php endif; ?>>
+                
+                
                 <div class="grid grid-cols-2 gap-6 mb-8 w-1/2"> 
-                    @foreach ($summaryData as $item)
+                    <?php $__currentLoopData = $summaryData; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <div class="card summary-card border border-gray-200 p-5"> 
-                            <span class="card-title text-sm uppercase">{{ $item->title }}</span>
-                            <strong class="card-value text-4xl mt-1 {{ $item->class }}">{{ $item->value }}</strong>
+                            <span class="card-title text-sm uppercase"><?php echo e($item->title); ?></span>
+                            <strong class="card-value text-4xl mt-1 <?php echo e($item->class); ?>"><?php echo e($item->value); ?></strong>
                         </div>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
 
-                {{-- Charts --}}
+                
                 <div class="grid grid-cols-3 gap-6 mb-8">
-                    {{-- Chart Bar: Stok Produk Berdasarkan Kategori --}}
+                    
                     <div class="card col-span-2 p-5">
                         <h3 class="text-xl font-semibold mb-4 text-gray-800">Stok Produk Berdasarkan Kategori</h3>
                         <div class="h-64">
                             <canvas id="salesBarChart"></canvas>
                         </div>
                     </div>
-                    {{-- Chart Doughnut: Lokasi Pemberi Rating --}}
+                    
                     <div class="card p-5">
                         <h3 class="text-xl font-semibold mb-6 text-gray-800">Lokasi Pemberi Rating</h3>
                         <div class="flex items-center justify-between">
                             <div class="relative w-36 h-36 flex-shrink-0">
                                 <canvas id="locationDoughnutChart"></canvas>
                                 <div class="absolute inset-0 flex flex-col items-center justify-center">
-                                    <span class="text-2xl font-bold text-gray-800">{{ $locationData['TotalOrders'] ?? 0 }}</span>
+                                    <span class="text-2xl font-bold text-gray-800"><?php echo e($locationData['TotalOrders'] ?? 0); ?></span>
                                     <span class="text-xs text-gray-500">Rating</span>
                                 </div>
                             </div>
                             <ul class="legend text-sm space-y-2 ml-4">
-                                @php
+                                <?php
                                     $chartColors = ['#dc3545', '#007bff', '#ccc'];
-                                @endphp
-                                @foreach ($locationData as $key => $item)
-                                    @if (is_numeric($key) && isset($item['Lokasi']))
+                                ?>
+                                <?php $__currentLoopData = $locationData; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <?php if(is_numeric($key) && isset($item['Lokasi'])): ?>
                                         <li>
-                                            <span class="inline-block w-3 h-3 rounded-full mr-2" style="background-color: {{ $chartColors[$key] }}"></span>
-                                            {{ $item['Lokasi'] }} ({{ $item['Persentase'] }}%)
+                                            <span class="inline-block w-3 h-3 rounded-full mr-2" style="background-color: <?php echo e($chartColors[$key]); ?>"></span>
+                                            <?php echo e($item['Lokasi']); ?> (<?php echo e($item['Persentase']); ?>%)
                                         </li>
-                                    @endif
-                                @endforeach
+                                    <?php endif; ?>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </ul>
                         </div>
                     </div>
                 </div>
 
-                {{-- Daftar Produk Terbaru --}}
+                
                 <div class="recent-products-section">
                     <h2 class="text-xl font-semibold mb-4 text-gray-800">Daftar Produk Terbaru</h2>
                     <div class="table-responsive card p-0 overflow-hidden">
@@ -279,63 +283,67 @@ $storeCity    = $user->kabupaten ?? 'Semarang';
                                 </tr>
                             </thead>
                             <tbody id="latestProductTableBody" class="bg-white divide-y divide-gray-200">
-                                @forelse ($latestProducts as $product)
+                                <?php $__empty_1 = true; $__currentLoopData = $latestProducts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
-                                                <img src="{{ $product->image_path ?? 'https://via.placeholder.com/40x40?text=P' }}"
+                                                <img src="<?php echo e($product->image_path ?? 'https://via.placeholder.com/40x40?text=P'); ?>"
                                                     onerror="this.onerror=null;this.src='https://via.placeholder.com/40';"
-                                                    alt="{{ $product->name }}" class="w-24 h-24 object-cover rounded-md mr-3 bg-gray-200">
-                                                <div class="text-sm font-medium text-gray-900">{{ $product->name }}</div>
+                                                    alt="<?php echo e($product->name); ?>" class="w-24 h-24 object-cover rounded-md mr-3 bg-gray-200">
+                                                <div class="text-sm font-medium text-gray-900"><?php echo e($product->name); ?></div>
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            {{ $product->category->name ?? 'N/A' }}
+                                            <?php echo e($product->category->name ?? 'N/A'); ?>
+
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-700">
-                                            Rp {{ number_format($product->price, 0, ',', '.') }}
+                                            Rp <?php echo e(number_format($product->price, 0, ',', '.')); ?>
+
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            {{ $product->stock }}
+                                            <?php echo e($product->stock); ?>
+
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            @php
+                                            <?php
                                                 $status = $product->status ?? ($product->stock > 0 ? 'Aktif' : 'NonAktif');
                                                 $statusClass = $status === 'Aktif' ? 'status-active' : 'status-inactive';
-                                            @endphp
-                                            <span class="status-badge {{ $statusClass }}">
-                                                {{ $status }}
+                                            ?>
+                                            <span class="status-badge <?php echo e($statusClass); ?>">
+                                                <?php echo e($status); ?>
+
                                             </span>
                                         </td>
                                     </tr>
-                                @empty
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                     <tr>
                                         <td colspan="5" class="px-6 py-4 text-center text-gray-500">Tidak ada produk terbaru.</td>
                                     </tr>
-                                @endforelse
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </section>
 
-            {{-- 2. PRODUCTS SECTION (PRODUK SAYA - TABEL) --}}
-            <section id="products-content" @if($activeTab !== 'products') style="display: none;" @endif>
+            
+            <section id="products-content" <?php if($activeTab !== 'products'): ?> style="display: none;" <?php endif; ?>>
                 <div class="product-toolbar flex justify-between items-center mb-6">
                     <input type="text" placeholder="Cari Produk" class="p-2 border border-gray-300 rounded-lg w-1/3 focus:ring-blue-500 focus:border-blue-500" oninput="filterProducts(this.value)">
-                    <a href="{{ route('seller.dashboard', ['tab' => 'addProduct']) }}" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg flex items-center transition">
+                    <a href="<?php echo e(route('seller.dashboard', ['tab' => 'addProduct'])); ?>" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg flex items-center transition">
                         <i class="fas fa-plus mr-2"></i> Tambah Produk
                     </a>
                 </div>
 
-                {{-- Statistik Produk --}}
+                
                 <div class="grid grid-cols-4 gap-6 mb-8">
-                    @foreach ($productStats as $key => $value)
+                    <?php $__currentLoopData = $productStats; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <div class="card summary-card border border-gray-200 p-5">
-                            <span class="card-title text-sm uppercase">{{ str_replace('_', ' ', strtoupper($key)) }}</span>
-                            <strong class="card-value text-3xl mt-1">{{ number_format($value) }}</strong>
+                            <span class="card-title text-sm uppercase"><?php echo e(str_replace('_', ' ', strtoupper($key))); ?></span>
+                            <strong class="card-value text-3xl mt-1"><?php echo e(number_format($value)); ?></strong>
                         </div>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
 
                 <div class="card p-0 overflow-hidden">
@@ -352,78 +360,83 @@ $storeCity    = $user->kabupaten ?? 'Semarang';
                                 </tr>
                             </thead>
                             <tbody id="productTableBody" class="bg-white divide-y divide-gray-200">
-                                @forelse ($products as $product)
+                                <?php $__empty_1 = true; $__currentLoopData = $products; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $product): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex items-center">
-                                                <img src="{{ $product->image_path ?? 'https://via.placeholder.com/40x40?text=P' }}"
+                                                <img src="<?php echo e($product->image_path ?? 'https://via.placeholder.com/40x40?text=P'); ?>"
                                                     onerror="this.onerror=null;this.src='https://via.placeholder.com/40';"
-                                                    alt="{{ $product->name }}" class="w-24 h-24 object-cover rounded-md mr-3 bg-gray-200">
-                                                <div class="text-sm font-medium text-gray-900">{{ $product->name }}</div>
+                                                    alt="<?php echo e($product->name); ?>" class="w-24 h-24 object-cover rounded-md mr-3 bg-gray-200">
+                                                <div class="text-sm font-medium text-gray-900"><?php echo e($product->name); ?></div>
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            {{ $product->category->name ?? 'N/A' }}
+                                            <?php echo e($product->category->name ?? 'N/A'); ?>
+
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-700">
-                                            Rp {{ number_format($product->price, 0, ',', '.') }}
+                                            Rp <?php echo e(number_format($product->price, 0, ',', '.')); ?>
+
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            {{ $product->stock }}
+                                            <?php echo e($product->stock); ?>
+
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap">
-                                            @php
+                                            <?php
                                                 $status = $product->status ?? ($product->stock > 0 ? 'Aktif' : 'NonAktif');
                                                 $statusClass = $status === 'Aktif' ? 'status-active' : 'status-inactive';
-                                            @endphp
-                                            <span class="status-badge {{ $statusClass }}">
-                                                {{ $status }}
+                                            ?>
+                                            <span class="status-badge <?php echo e($statusClass); ?>">
+                                                <?php echo e($status); ?>
+
                                             </span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                            <button onclick="editProduct({{ $product->id }})"
+                                            <button onclick="editProduct(<?php echo e($product->id); ?>)"
                                                 class="text-blue-600 hover:text-blue-800 transition mr-2 p-1">
                                                 <i class="fas fa-pencil-alt"></i>
                                             </button>
-                                            <button onclick="deleteProductAction({{ $product->id }})"
+                                            <button onclick="deleteProductAction(<?php echo e($product->id); ?>)"
                                                 class="text-red-600 hover:text-red-800 transition p-1">
                                                 <i class="fas fa-trash-alt"></i>
                                             </button>
                                         </td>
                                     </tr>
-                                @empty
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                     <tr>
                                         <td colspan="6" class="px-6 py-4 text-center text-gray-500">Tidak ada produk ditemukan.</td>
                                     </tr>
-                                @endforelse
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>
                     <div class="table-footer flex justify-between items-center p-4 border-t border-gray-200">
-                        {{ $products->appends(request()->except('page'))->links() }}
+                        <?php echo e($products->appends(request()->except('page'))->links()); ?>
+
                     </div>
                 </div>
             </section>
 
-            {{-- 3. ADD/EDIT PRODUCT SECTION (FORM) --}}
-            <section id="add-product-content" @if($activeTab !== 'addProduct') style="display: none;" @endif>
+            
+            <section id="add-product-content" <?php if($activeTab !== 'addProduct'): ?> style="display: none;" <?php endif; ?>>
                 <div class="w-full max-w-4xl mx-auto">
 
-                    <a href="{{ route('seller.dashboard', ['tab' => 'products']) }}" class="flex items-center text-gray-600 hover:text-blue-600 mb-6 transition duration-150">
+                    <a href="<?php echo e(route('seller.dashboard', ['tab' => 'products'])); ?>" class="flex items-center text-gray-600 hover:text-blue-600 mb-6 transition duration-150">
                         <i class="fas fa-arrow-left mr-2"></i> Kembali ke Daftar Produk
                     </a>
 
-                    {{-- Form Utama --}}
+                    
                     <form id="add-product-form"
-                        action="{{ $editMode ? route('seller.products.update', $editProduct->id) : route('seller.products.store') }}"
+                        action="<?php echo e($editMode ? route('seller.products.update', $editProduct->id) : route('seller.products.store')); ?>"
                         method="POST"
                         enctype="multipart/form-data">
-                        @csrf
-                        @if ($editMode)
-                            @method('PUT')
-                        @endif
+                        <?php echo csrf_field(); ?>
+                        <?php if($editMode): ?>
+                            <?php echo method_field('PUT'); ?>
+                        <?php endif; ?>
 
-                        {{-- Foto Produk Card --}}
+                        
                         <div class="card mb-6 p-6">
                             <h2 class="text-xl font-semibold mb-4 border-b pb-3 border-gray-200">Foto Produk</h2>
                             <label for="foto_produk_input" class="photo-upload-area block border-2 border-dashed border-gray-300 rounded-lg p-12 text-center text-gray-500 cursor-pointer hover:border-blue-500 transition-colors">
@@ -433,89 +446,97 @@ $storeCity    = $user->kabupaten ?? 'Semarang';
 
                                 <input type="file" id="foto_produk_input" accept=".jpg,.jpeg,.png" style="display: none;" name="foto_produk">
 
-                                {{-- Preview Foto Lama saat Edit --}}
-                                @if ($editMode && $editProduct->image_path)
+                                
+                                <?php if($editMode && $editProduct->image_path): ?>
                                     <div class="mt-4">
-                                        <img src="{{ $editProduct->image_path }}" alt="Foto Lama" class="w-20 h-20 object-cover rounded-lg mx-auto border border-gray-200">
+                                        <img src="<?php echo e($editProduct->image_path); ?>" alt="Foto Lama" class="w-20 h-20 object-cover rounded-lg mx-auto border border-gray-200">
                                         <small class="block text-xs text-gray-500 mt-1">Foto Lama</small>
                                     </div>
-                                @endif
+                                <?php endif; ?>
 
                             </label>
-                            @error('foto_produk') <small class="text-red-500 block mt-2">{{ $message }}</small> @enderror
+                            <?php $__errorArgs = ['foto_produk'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <small class="text-red-500 block mt-2"><?php echo e($message); ?></small> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                         </div>
 
-                        {{-- Informasi Produk Card --}}
+                        
                         <div class="card mb-6 p-6">
                             <h2 class="text-xl font-semibold mb-4 border-b pb-3 border-gray-200">Informasi Produk</h2>
                             <div class="space-y-5">
 
-                                {{-- 1. NAMA PRODUK --}}
+                                
                                 <div>
                                     <label for="product-name-input" class="block text-sm font-medium text-gray-700 mb-1">Nama Produk</label>
                                     <input type="text" id="product-name-input" name="name" required class="form-input focus:ring-blue-500 focus:border-blue-500"
                                         placeholder="Contoh: Buku Panduan Skripsi"
-                                        value="{{ old('name', $editMode ? $editProduct->name : '') }}">
+                                        value="<?php echo e(old('name', $editMode ? $editProduct->name : '')); ?>">
                                 </div>
 
-                                {{-- 2. DESKRIPSI --}}
+                                
                                 <div>
                                     <label for="product-description-input" class="block text-sm font-medium text-gray-700 mb-1">Deskripsi</label>
                                     <textarea id="product-description-input" name="description" rows="4" class="form-input focus:ring-blue-500 focus:border-blue-500"
-                                        placeholder="Jelaskan produk Anda secara detail...">{{ old('description', $editMode ? $editProduct->description : '') }}</textarea>
+                                        placeholder="Jelaskan produk Anda secara detail..."><?php echo e(old('description', $editMode ? $editProduct->description : '')); ?></textarea>
                                 </div>
 
-                                {{-- 3. KONDISI dan MINIMAL PEMESANAN (DUA KOLOM) --}}
+                                
                                 <div class="grid grid-cols-2 gap-4">
                                     <div>
                                         <label for="product-condition" class="block text-sm font-medium text-gray-700 mb-1">Kondisi</label>
                                         <select id="product-condition" name="condition" class="form-input focus:ring-blue-500 focus:border-blue-500">
-                                            <option value="" @if(old('condition', $editMode ? $editProduct->condition : '') === '') selected @endif>Pilih kondisi barang</option>
-                                            <option value="baru" @if(old('condition', $editMode ? $editProduct->condition : '') === 'baru') selected @endif>Baru</option>
-                                            <option value="bekas" @if(old('condition', $editMode ? $editProduct->condition : '') === 'bekas') selected @endif>Bekas</option>
+                                            <option value="" <?php if(old('condition', $editMode ? $editProduct->condition : '') === ''): ?> selected <?php endif; ?>>Pilih kondisi barang</option>
+                                            <option value="baru" <?php if(old('condition', $editMode ? $editProduct->condition : '') === 'baru'): ?> selected <?php endif; ?>>Baru</option>
+                                            <option value="bekas" <?php if(old('condition', $editMode ? $editProduct->condition : '') === 'bekas'): ?> selected <?php endif; ?>>Bekas</option>
                                         </select>
                                     </div>
                                     <div>
                                         <label for="product-min_order" class="block text-sm font-medium text-gray-700 mb-1">Minimal Pemesanan</label>
                                         <input type="number" id="product-min_order" name="min_order"
-                                            value="{{ old('min_order', $editMode ? $editProduct->min_order : 1) }}" min="1" class="form-input focus:ring-blue-500 focus:border-blue-500">
+                                            value="<?php echo e(old('min_order', $editMode ? $editProduct->min_order : 1)); ?>" min="1" class="form-input focus:ring-blue-500 focus:border-blue-500">
                                     </div>
                                 </div>
 
-                                {{-- 4. KATEGORI --}}
+                                
                                 <div>
                                     <label for="product-category-input" class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
                                     <select id="product-category-input" name="category_id" required class="form-input focus:ring-blue-500 focus:border-blue-500">
                                         <option value="">Pilih salah satu</option>
-                                        @foreach ($allCategories as $category)
-                                            <option value="{{ $category->id }}"
-                                                @if(old('category_id', $editMode ? $editProduct->category_id : '') == $category->id) selected @endif>
-                                                {{ $category->name }}
+                                        <?php $__currentLoopData = $allCategories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <option value="<?php echo e($category->id); ?>"
+                                                <?php if(old('category_id', $editMode ? $editProduct->category_id : '') == $category->id): ?> selected <?php endif; ?>>
+                                                <?php echo e($category->name); ?>
+
                                             </option>
-                                        @endforeach
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </select>
                                 </div>
                             </div>
                         </div>
 
-                        {{-- Harga & Stok Card --}}
+                        
                         <div class="card mb-6 p-6">
                             <h2 class="text-xl font-semibold mb-4 border-b pb-3 border-gray-200">Harga & Stok</h2>
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
                                     <label for="product-price-input" class="block text-sm font-medium text-gray-700 mb-1">Harga (Rp)</label>
                                     <input type="number" id="product-price-input" name="price" required min="0" class="form-input focus:ring-blue-500 focus:border-blue-500"
-                                        placeholder="0" value="{{ old('price', $editMode ? $editProduct->price : '') }}">
+                                        placeholder="0" value="<?php echo e(old('price', $editMode ? $editProduct->price : '')); ?>">
                                 </div>
                                 <div>
                                     <label for="product-stock-input" class="block text-sm font-medium text-gray-700 mb-1">Stok Barang</label>
                                     <input type="number" id="product-stock-input" name="stock" required min="0" class="form-input focus:ring-blue-500 focus:border-blue-500"
-                                        placeholder="0" value="{{ old('stock', $editMode ? $editProduct->stock : '') }}">
+                                        placeholder="0" value="<?php echo e(old('stock', $editMode ? $editProduct->stock : '')); ?>">
                                 </div>
                             </div>
                         </div>
 
-                        {{-- Varian Produk Card --}}
+                        
                         <div class="card mb-6 p-6">
                             <div class="flex justify-between items-center mb-4 border-b pb-3 border-gray-200">
                                 <h2 class="text-xl font-semibold">Varian Produk</h2>
@@ -531,11 +552,12 @@ $storeCity    = $user->kabupaten ?? 'Semarang';
 
                         <div style="height: 100px;"></div>
 
-                        {{-- Sticky Footer/Action Bar --}}
+                        
                         <div class="action-footer">
-                            <a href="{{ route('seller.dashboard', ['tab' => 'products']) }}" class="cancel-btn px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition">Batal</a>
+                            <a href="<?php echo e(route('seller.dashboard', ['tab' => 'products'])); ?>" class="cancel-btn px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100 transition">Batal</a>
                             <button type="submit" class="save-btn px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
-                                {{ $editMode ? 'Simpan Perubahan' : 'Simpan Produk' }}
+                                <?php echo e($editMode ? 'Simpan Perubahan' : 'Simpan Produk'); ?>
+
                             </button>
                         </div>
                     </form>
@@ -544,10 +566,10 @@ $storeCity    = $user->kabupaten ?? 'Semarang';
         </main>
     </div>
 
-    {{-- DELETE FORM HIDDEN --}}
+    
     <form id="delete-form" method="POST" style="display: none;">
-        @csrf
-        @method('DELETE')
+        <?php echo csrf_field(); ?>
+        <?php echo method_field('DELETE'); ?>
     </form>
     
     <script>
@@ -580,13 +602,13 @@ $storeCity    = $user->kabupaten ?? 'Semarang';
 
         function editProduct(id) {
             // Arahkan ke form 'addProduct' dengan parameter mode=edit dan ID
-            window.location.href = "{{ route('seller.dashboard', ['tab' => 'addProduct']) }}" +
+            window.location.href = "<?php echo e(route('seller.dashboard', ['tab' => 'addProduct'])); ?>" +
                 `&mode=edit&id=${id}`;
         }
 
         function deleteProductAction(id) {
             // Menggunakan placeholder untuk menghindari UrlGenerationException
-            const routeUrl = "{{ route('seller.products.destroy', ['product' => '__ID__']) }}";
+            const routeUrl = "<?php echo e(route('seller.products.destroy', ['product' => '__ID__'])); ?>";
             const finalRouteUrl = routeUrl.replace('__ID__', id);
             
             if (confirm('Yakin ingin menghapus produk ini? Tindakan ini tidak dapat dibatalkan.')) {
@@ -618,7 +640,7 @@ $storeCity    = $user->kabupaten ?? 'Semarang';
         // =========================================================
 
         function renderSalesBarChart() {
-            const data = @json($salesByCategory);
+            const data = <?php echo json_encode($salesByCategory, 15, 512) ?>;
             if (data.length === 0) return;
             const labels = data.map(item => item.Kategori);
             const values = data.map(item => item.Penjualan); // Nilai stok
@@ -647,7 +669,7 @@ $storeCity    = $user->kabupaten ?? 'Semarang';
         }
 
         function renderLocationDoughnutChart() {
-            const data = @json($locationData);
+            const data = <?php echo json_encode($locationData, 15, 512) ?>;
             const distributions = [
                 { wilayah: data[0].Lokasi, persentase: data[0].Persentase, warna: '#dc3545' },
                 { wilayah: data[1].Lokasi, persentase: data[1].Persentase, warna: '#007bff' },
@@ -684,4 +706,4 @@ $storeCity    = $user->kabupaten ?? 'Semarang';
         }
     </script>
 </body>
-</html>
+</html><?php /**PATH C:\xampp\htdocs\PPL QUADMARKET\QuadMarket\resources\views/seller/dashboard.blade.php ENDPATH**/ ?>

@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
+    /**
+     * Tampilkan formulir pembuatan produk baru.
+     */
     public function create()
     {
         $categories = Category::all();
@@ -20,25 +23,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required',
-            'description' => 'nullable',
-            'price' => 'required|integer',
-            'category' => 'required',
-            'location' => 'required',
-            'store_name' => 'required',
-            'rating' => 'required|numeric',
-            'reviews_count' => 'required|integer',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-        ]);
-
-        if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('products', 'public');
-        }
-
-        Product::create($validated);
-
-        return redirect()->back()->with('success', 'Produk berhasil ditambahkan!');
+        // 1. Validasi Data
         $validatedData = $request->validate([
             'name'        => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -56,14 +41,20 @@ class ProductController extends Controller
         $productData['rating'] = 0; 
         $productData['total_ulasan'] = 0; 
 
-        // Upload Foto Produk
+        // 2. Upload Foto Produk dan Simpan Path (Perbaikan Gambar di sini)
         if ($request->hasFile('foto_produk')) {
-            $fotoPath = $request->file('foto_produk')->store('public/product_images'); 
+            // Simpan file ke direktori 'product_images' di disk 'public'.
+            // $fotoPath akan berisi path relatif (misal: 'product_images/abc.jpg').
+            $fotoPath = $request->file('foto_produk')->store('product_images', 'public'); 
+            
+            // Storage::url() akan mengonversi path relatif menjadi URL publik.
+            // (Hasil: /storage/product_images/abc.jpg)
             $productData['image_path'] = Storage::url($fotoPath); 
         } else {
             $productData['image_path'] = null;
         }
 
+        // Hapus field file dari data sebelum disimpan ke database
         unset($productData['foto_produk']); 
 
         Product::create($productData); 
@@ -97,12 +88,15 @@ class ProductController extends Controller
         $productData['status'] = $validatedData['stock'] > 0 ? 'Aktif' : 'NonAktif';
 
         if ($request->hasFile('foto_produk')) {
-            // Hapus gambar lama
+            // 1. Hapus gambar lama dari storage (Perbaikan Gambar di sini)
             if ($product->image_path) {
-                $oldPath = str_replace(config('app.url') . '/storage', 'public', $product->image_path);
-                Storage::delete($oldPath);
+                // Hapus path '/storage/' dari URL untuk mendapatkan path relatif yang dapat dihapus.
+                $pathToDelete = str_replace('/storage/', '', $product->image_path);
+                Storage::disk('public')->delete($pathToDelete);
             }
-            $fotoPath = $request->file('foto_produk')->store('public/product_images');
+            
+            // 2. Unggah gambar baru
+            $fotoPath = $request->file('foto_produk')->store('product_images', 'public');
             $productData['image_path'] = Storage::url($fotoPath);
         }
 
@@ -123,10 +117,11 @@ class ProductController extends Controller
             return redirect()->back()->with('error', 'Anda tidak berhak menghapus produk ini.');
         }
         
-        // Hapus gambar dari storage
+        // Hapus gambar dari storage (Perbaikan Gambar di sini)
         if ($product->image_path) {
-            $path = str_replace(config('app.url') . '/storage', 'public', $product->image_path);
-            Storage::delete($path);
+            // Hapus path '/storage/' dari URL untuk mendapatkan path relatif.
+            $path = str_replace('/storage/', '', $product->image_path);
+            Storage::disk('public')->delete($path);
         }
 
         $product->delete();
