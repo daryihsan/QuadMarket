@@ -122,5 +122,18 @@ return [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
+    /*
+    |--------------------------------------------------------------------------
+    | Class Aliases
+    |--------------------------------------------------------------------------
+    |
+    | Di sini kita tambahkan alias untuk facade Pdf dari barryvdh/laravel-dompdf
+    | supaya di controller kamu bisa pakai "Pdf::loadView(...)".
+    |
+    */
+
+    'aliases' => \Illuminate\Support\Facades\Facade::defaultAliases()->merge([
+        'Pdf' => Barryvdh\DomPDF\Facade\Pdf::class,
+    ])->toArray(),
 
 ];

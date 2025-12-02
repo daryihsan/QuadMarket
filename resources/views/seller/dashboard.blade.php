@@ -27,6 +27,11 @@ $summaryData = [
     // Entri 'Pesanan Baru' dihapus
     (object)['title' => 'Rating Rata-Rata', 'value' => number_format($averageRating, 1), 'class' => 'text-red-500'],
 ];
+
+$user = auth()->user();
+$storeName    = $user->nama_toko ?? 'Nama Toko';
+$storeInitial = mb_substr($storeName, 0, 1, 'UTF-8'); 
+$storeCity    = $user->kabupaten ?? 'Semarang';       
 @endphp
 <!DOCTYPE html>
 <html lang="id">
@@ -116,10 +121,16 @@ $summaryData = [
         <aside class="sidebar">
             <div> {{-- Container untuk Logo dan Navigasi --}}
                 <div class="logo-section mb-10">
-                    <div class="logo-icon">T</div>
+                    <div class="logo-icon">
+                        {{ $storeInitial }}
+                    </div>
                     <div class="logo-text">
-                        <strong class="text-lg">Totem</strong>
-                        <span class="block text-xs text-gray-500">Semarang</span>
+                        <strong class="text-lg">
+                            {{ $storeName }}
+                        </strong>
+                        <span class="block text-xs text-gray-500">
+                            {{ $storeCity }}
+                        </span>
                     </div>
                 </div>
                 <nav class="main-nav">
@@ -173,7 +184,7 @@ $summaryData = [
                     </h1>
                     <p class="text-sm text-gray-500 mt-1">
                         @if ($activeTab === 'overview')
-                            Selamat Datang, Totem! Ini ringkasan performa tokomu.
+                            Selamat Datang, {{ $storeName }}! Ini ringkasan performa tokomu.
                         @elseif ($activeTab === 'products')
                             Kelola semua produk yang Anda jual.
                         @elseif ($activeTab === 'addProduct')
@@ -415,7 +426,7 @@ $summaryData = [
 
                         {{-- Foto Produk Card --}}
                         <div class="card mb-6 p-6">
-                            <h2 class="text-xl font-semibold mb-4 border-b pb-3 border-gray-200">Foto Produk</h2>
+                            <h2 class="text-xl font-semibold mb-4 border-b pb-3 border-gray-200">Informasi Produk</h2>
                             <label for="foto_produk_input" class="photo-upload-area block border-2 border-dashed border-gray-300 rounded-lg p-12 text-center text-gray-500 cursor-pointer hover:border-blue-500 transition-colors">
                                 <i class="fas fa-cloud-upload-alt text-3xl mb-2 text-gray-400"></i>
                                 <div class="upload-text font-medium text-gray-700">Klik untuk mengunggah atau seret dan lepas</div>
