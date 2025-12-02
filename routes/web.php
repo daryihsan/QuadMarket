@@ -12,6 +12,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ReviewController; 
 use App\Models\Category;
 
 
@@ -27,10 +28,13 @@ Route::get('/katalog', [CatalogController::class, 'index'])->name('katalog');
 
 // detail produk
 Route::get('/product/{id}/detail', function ($id) {
-    // Simulasi pengambilan produk menggunakan ID (gunakan Product::findOrFail($id) di controller jika sudah ada)
-    // Saat ini hanya mengembalikan view, tapi route name sudah terpasang
-    return view('products.detail', compact('id'));
+    // TAMBAH 'reviews' ke eager load
+    $product = App\Models\Product::with(['user', 'category', 'reviews'])->findOrFail($id); 
+    return view('products.detail', compact('product'));
 })->name('product.detail');
+
+// ulasan produk
+Route::post('/product/{product}/review', [ReviewController::class, 'store'])->name('review.store');
 
 // PENJUAL--------------------------------------------------------------------------
 // regist
