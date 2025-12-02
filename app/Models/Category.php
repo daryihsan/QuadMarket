@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
-    protected $fillable = ['name'];
+    // Tambahkan 'slug' ke properti $fillable agar Laravel mengizinkan 
+    // pengisian massal (mass assignment) saat menggunakan Category::create() atau $category->update().
+    protected $fillable = ['name', 'slug'];
+    
     public $timestamps = false; 
 }

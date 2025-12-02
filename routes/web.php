@@ -9,6 +9,8 @@ use App\Http\Controllers\SellerController;
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\VerificationController;
+use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 
 // PENGUNJUNG--------------------------------------------------------------------------
@@ -72,6 +74,14 @@ Route::prefix('seller')->name('seller.')->group(function () {
     // laporan
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
     Route::get('/reports/download', [ReportController::class, 'downloadPdf'])->name('reports.download');
+
+    //categories
+    Route::prefix('categories')->name('categories.')->group(function () {
+        Route::get('/', [CategoryController::class, 'index'])->name('index');
+        Route::post('/', [CategoryController::class, 'store'])->name('store');
+        Route::put('/{category}', [CategoryController::class, 'update'])->name('update');
+        Route::delete('/{category}', [CategoryController::class, 'destroy'])->name('destroy');
+    });
 });
 
 // middleware auth login penjual (harus login baru bisa akses dashboard)
@@ -110,6 +120,14 @@ Route::prefix('platform')->name('platform.')->group(function () {
     Route::get('/verifikasi/{id}', [PlatformController::class, 'verificationDetail'])->name('verifikasi.detail');
     
     Route::post('/verifikasi/{id}/process', [PlatformController::class, 'processVerification'])->name('verifikasi.process');
+    
+    // 🆕 MANAJEMEN KATEGORI (CRUD)
+    Route::prefix('categories')->name('categories.')->group(function () {
+        Route::get('/', [CategoryController::class, 'index'])->name('index'); // platform.categories.index
+        Route::post('/', [CategoryController::class, 'store'])->name('store');
+        Route::put('/{category}', [CategoryController::class, 'update'])->name('update');
+        Route::delete('/{category}', [CategoryController::class, 'destroy'])->name('destroy');
+    });
 });
 
 // DRAFT!!!!!
