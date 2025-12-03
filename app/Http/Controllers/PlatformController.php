@@ -8,25 +8,51 @@ use Illuminate\Support\Facades\Mail;
 
 use App\Mail\SellerVerificationMail;
 use App\Mail\SellerRejectionMail;
+use App\Models\Seller;
+use App\Models\Product;
 
 class PlatformController extends Controller
 {
     // --- DASHBOARD ---
-    public function dashboard()
-    {
-        $pending_count = User::where('status_akun', 'pending')->count();
-        $aktif_count = User::where('status_akun', 'active')->count();
-        $tidak_aktif_count = User::where('status_akun', 'rejected')->count();
+   public function dashboard()
+{
+    // Hitung jumlah provinsi yang memiliki penjual
+    $totalSellerLocations = Seller::distinct('propinsi')->count('propinsi');
 
-        $data = [
-            'pending_verifications_count' => $pending_count,
-            'total_penjual_aktif' => $aktif_count,
-            'total_penjual_tidak_aktif' => $tidak_aktif_count,
-            'total_pengunjung_rating' => 5123,
-        ];
+    // Hitung jumlah penjual per provinsi
+    $provinsiCounts = Seller::select('propinsi')
+        ->selectRaw('COUNT(*) as total')
+        ->groupBy('propinsi')
+        ->orderByDesc('total')
+        ->get();
 
-        return view('platform.dashboard', $data);
-    }
+    // TOTAL penjual (untuk menghitung persen)
+    $totalProvCount = max($provinsiCounts->sum('total'), 1);
+
+    // Status akun
+    $totalActive = Seller::where('status_akun', 'active')->count();
+    $totalInactive = Seller::where('status_akun', 'rejected')->count();
+
+    // Statistik lain
+    $totalProducts = Product::count();
+    $totalNewSellers = Seller::whereDate('created_at', '>=', now()->subDays(7))->count();
+
+    // Dummy jika table buyers/transaksi belum dibuat
+    $totalBuyers = 5123;
+    $totalTransactions = 4123;
+
+    return view('platform.dashboard', compact(
+        'totalSellerLocations',
+        'provinsiCounts',
+        'totalProvCount',
+        'totalActive',
+        'totalInactive',
+        'totalProducts',
+        'totalNewSellers',
+        'totalBuyers',
+        'totalTransactions'
+    ));
+}
 
     // --- LIST VERIFIKASI ---
     public function verificationList()

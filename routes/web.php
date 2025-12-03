@@ -9,6 +9,8 @@ use App\Http\Controllers\SellerController;
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\LaporanController;
 use Illuminate\Support\Facades\Route;
 
 // PENGUNJUNG--------------------------------------------------------------------------
@@ -83,34 +85,35 @@ Route::middleware('auth')->prefix('seller')->name('seller.')->group(function () 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // ADMIN--------------------------------------------------------------------------
-// platform
 Route::prefix('platform')->name('platform.')->group(function () {
-    // dashboard
-    Route::get('/dashboard', function () {
-        return view('platform.dashboard');
-    })->name('dashboard');
 
-    // laporan
-    Route::get('/laporan', function () {
-        return view('platform.laporan');
-    })->name('laporan');
+    // dashboard
+    Route::get('/dashboard', [PlatformController::class, 'dashboard'])->name('dashboard');
+
+    // laporan (BENAR)
+    Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan');
 
     // laporan provinsi
-    Route::get('/laporan/provinsi', function () {
-        return view('platform.provinsi');
-    })->name('laporan.provinsi');
+    Route::get('/laporan/provinsi', [LaporanController::class, 'provinsi'])->name('laporan.provinsi');
+
 
     // laporan produk
-    Route::get('/laporan/produk', function () {
-        return view('platform.produk');
-    })->name('laporan.produk');
-    
-    // verifikasi penjual (SRS-MartPlace-02)
+    Route::get('/laporan/produk', [LaporanController::class, 'produk'])->name('laporan.produk');
+
+    // manajemen kategori
+    Route::prefix('categories')->name('categories.')->group(function () {
+        Route::get('/', [CategoryController::class, 'index'])->name('index');
+        Route::post('/', [CategoryController::class, 'store'])->name('store');
+        Route::put('/{category}', [CategoryController::class, 'update'])->name('update');
+        Route::delete('/{category}', [CategoryController::class, 'destroy'])->name('destroy');
+    });
+
+    // verifikasi penjual
     Route::get('/verifikasi', [PlatformController::class, 'verificationList'])->name('verifikasi.list');
     Route::get('/verifikasi/{id}', [PlatformController::class, 'verificationDetail'])->name('verifikasi.detail');
-    
     Route::post('/verifikasi/{id}/process', [PlatformController::class, 'processVerification'])->name('verifikasi.process');
 });
+
 
 // DRAFT!!!!!
 // Route::get('/home', function () {

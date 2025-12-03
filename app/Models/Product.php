@@ -10,34 +10,28 @@ class Product extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',        // Foreign key ke penjual
-        'category_id',    // Foreign key ke kategori
-        'name',
-        'description',
-        'price',
-        'stock',
+        'seller_id',        // FOREIGN KEY KE PENJUAL
+        'category_id',      
+        'nama_produk',
+        'deskripsi_singkat',
+        'harga',
+        'stok',
+        'rating',
+        'total_ulasan',
+        'image_path',
+        'status',
         'condition',
         'min_order',
-        'status',         // Opsional
-        'image_path',     // Path gambar
-        'rating',
-        'total_ulasan'
-        // Tambahkan field lain jika ada
     ];
 
-    /**
-     * Relasi ke kategori
-     */
     public function category()
     {
         return $this->belongsTo(Category::class);
     }
 
-    /**
-     * Relasi ke user (penjual)
-     */
-    public function user()
+    // Relasi BENAR ke seller
+    public function seller()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Seller::class, 'seller_id');
     }
 }
