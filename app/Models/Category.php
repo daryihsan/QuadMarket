@@ -8,7 +8,7 @@ class Category extends Model
 {
     // Tambahkan 'slug' ke properti $fillable agar Laravel mengizinkan 
     // pengisian massal (mass assignment) saat menggunakan Category::create() atau $category->update().
-    protected $fillable = ['name', 'slug'];
+    protected $fillable = ['name', 'slug', 'icon_path'];
     
     public $timestamps = false; 
 }

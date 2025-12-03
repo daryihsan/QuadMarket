@@ -40,4 +40,10 @@ class Product extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    //ini buat review
+    public function reviews()
+    {
+        return $this->hasMany(\App\Models\Review::class);
+    }
 }

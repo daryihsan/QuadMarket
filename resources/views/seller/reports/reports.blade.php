@@ -1,8 +1,14 @@
 @php
 // Data yang dikirim dari ReportController
 $activeReportTab = $activeReportTab ?? 'rating';
-$categories = $categories ?? collect([]);
-$reportData = $reportData ?? collect([]);
+$categories      = $categories ?? collect([]);
+$reportData      = $reportData ?? collect([]);
+
+// DATA TOKO DARI USER LOGIN
+$user        = auth()->user();
+$storeName   = $user->nama_toko ?? 'Nama Toko';
+$storeInitial = mb_substr($storeName, 0, 1, 'UTF-8');
+$storeCity   = $user->kabupaten ?? 'Semarang';
 @endphp
 <!DOCTYPE html>
 <html lang="id">
@@ -21,13 +27,13 @@ $reportData = $reportData ?? collect([]);
         }
         body { background-color: var(--background-color); color: var(--text-color); font-family: 'Inter', sans-serif; }
         .dashboard-container { display: flex; min-height: 100vh; }
-        .sidebar { /* Gaya sidebar sama seperti dashboard.blade.php */ 
+        .sidebar { 
             width: 250px; 
             background-color: var(--card-background); 
             padding: 20px; 
             display: flex; 
-            flex-direction: column; /* Atur arah flex column */
-            justify-content: space-between; /* Untuk memisahkan konten atas dan bawah */
+            flex-direction: column; 
+            justify-content: space-between; 
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.05); 
             flex-shrink: 0; 
         }
@@ -41,7 +47,6 @@ $reportData = $reportData ?? collect([]);
         .status-hampir-habis { background-color: #fff3cd; color: #856404; }
         .status-habis { background-color: #f8d7da; color: var(--inactive-status); }
         .action-icon:hover { color: var(--primary-color); }
-        /* Style untuk logo di sidebar agar konsisten */
         .logo-section { display: flex; align-items: center; padding-bottom: 30px; border-bottom: 1px solid var(--border-color); }
         .logo-icon { width: 30px; height: 30px; background-color: var(--primary-color); color: white; display: flex; align-items: center; justify-content: center; border-radius: 5px; font-weight: bold; margin-right: 10px; }
         .settings-nav .nav-link { transition: all 0.2s; }
@@ -52,12 +57,14 @@ $reportData = $reportData ?? collect([]);
     <div class="dashboard-container">
         {{-- SIDEBAR --}}
         <aside class="sidebar">
-            <div> {{-- Container untuk Logo dan Navigasi --}}
+            <div>
                 <div class="logo-section mb-10">
-                    <div class="logo-icon">T</div>
+                    <div class="logo-icon">
+                        {{ $storeInitial }}
+                    </div>
                     <div class="logo-text">
-                        <strong class="text-lg">Totem</strong>
-                        <span class="block text-xs text-gray-500">Semarang</span>
+                        <strong class="text-lg">{{ $storeName }}</strong>
+                        <span class="block text-xs text-gray-500">{{ $storeCity }}</span>
                     </div>
                 </div>
                 <nav class="main-nav">
@@ -81,7 +88,7 @@ $reportData = $reportData ?? collect([]);
                 </nav>
             </div>
             
-            {{-- TOMBOL KELUAR - DITEMPATKAN DI LUAR NAV DENGAN PADDING ATAS UNTUK MEMISAHKAN --}}
+            {{-- TOMBOL KELUAR --}}
             <div class="settings-nav pt-4 border-t" style="border-color: var(--border-color);">
                 <ul>
                     <li class="mt-4">
@@ -117,8 +124,8 @@ $reportData = $reportData ?? collect([]);
                         @endif
                     </p>
                 </div>
-                {{-- Unduh PDF (SRS-12, 13, 14) --}}
-                <a href="{{ route('seller.reports.download', ['type' => $activeReportTab]) }}" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg flex items-center transition">
+                {{-- Unduh PDF --}}
+                <a href="{{ route('seller.reports.download', array_merge(request()->all(), ['type' => $activeReportTab])) }}" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg flex items-center transition">
                     <i class="fas fa-download mr-2"></i> Unduh PDF
                 </a>
             </header>
@@ -132,7 +139,7 @@ $reportData = $reportData ?? collect([]);
 
             <div class="card p-0">
                 @if ($activeReportTab === 'rating')
-                    {{-- 1. Laporan Rating (SRS-13: Urutkan Rating Menurun) --}}
+                    {{-- 1. Laporan Rating --}}
                     <div class="filter-bar p-4 flex gap-4 items-center border-b border-gray-200">
                         <form method="GET" class="flex gap-4 items-center" action="{{ route('seller.reports.index') }}">
                             <input type="hidden" name="report_tab" value="rating">
@@ -191,7 +198,7 @@ $reportData = $reportData ?? collect([]);
                     </table>
 
                 @elseif ($activeReportTab === 'stock')
-                    {{-- 2. Laporan Stok (SRS-12: Urutkan Stok Menurun) --}}
+                    {{-- 2. Laporan Stok --}}
                     <div class="filter-bar p-4 flex gap-4 items-center border-b border-gray-200">
                         <form method="GET" class="flex gap-4 items-center" action="{{ route('seller.reports.index') }}">
                             <input type="hidden" name="report_tab" value="stock">
@@ -205,7 +212,7 @@ $reportData = $reportData ?? collect([]);
                             <select name="sort" class="p-2 border border-gray-300 rounded-lg">
                                 <option value="stock_desc">Urutan Stok (Default)</option>
                                 <option value="stock_desc" @if(request('sort') == 'stock_desc') selected @endif>Stok Terbanyak</option>
-                                <option value="stock_asc" @if(request('sort') == 'stock_asc') selected @endif>Stok Tersedikit</option>
+                                <option value="stock_asc"  @if(request('sort') == 'stock_asc')  selected @endif>Stok Tersedikit</option>
                             </select>
                             <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition">Terapkan</button>
                         </form>
@@ -243,7 +250,7 @@ $reportData = $reportData ?? collect([]);
                     </table>
 
                 @elseif ($activeReportTab === 'low_stock')
-                    {{-- 3. Laporan Peringatan Stok Rendah (SRS-14: Stok <= 2) --}}
+                    {{-- 3. Laporan Peringatan Stok Rendah --}}
                     <div class="filter-bar p-4 flex justify-between items-center border-b border-gray-200">
                         <form method="GET" class="flex gap-4 items-center" action="{{ route('seller.reports.index') }}">
                             <input type="hidden" name="report_tab" value="low_stock">
@@ -302,6 +309,7 @@ $reportData = $reportData ?? collect([]);
                         </tbody>
                     </table>
                 @endif
+
                 <div class="table-footer flex justify-between items-center p-4 border-t border-gray-200">
                     <div>Menampilkan {{ $reportData->firstItem() ?? 0 }} sampai {{ $reportData->lastItem() ?? 0 }} dari {{ $reportData->total() }} hasil</div>
                     {{ $reportData->appends(request()->except('page'))->links() }}
@@ -310,19 +318,26 @@ $reportData = $reportData ?? collect([]);
         </main>
     </div>
 
-    {{-- Scripts untuk edit/delete action di laporan --}}
+    {{-- DELETE FORM HIDDEN (untuk tombol hapus di laporan) --}}
+    <form id="delete-form" method="POST" style="display:none;">
+        @csrf
+        @method('DELETE')
+    </form>
+
     <script>
         function editProduct(id) {
             window.location.href = "{{ route('seller.dashboard', ['tab' => 'addProduct']) }}" + `&mode=edit&id=${id}`;
         }
         function deleteProductAction(id) {
-            const routeUrl = "{{ route('seller.products.destroy', ['product' => '__ID__']) }}";
+            const routeUrl     = "{{ route('seller.products.destroy', ['product' => '__ID__']) }}";
             const finalRouteUrl = routeUrl.replace('__ID__', id);
             
             if (confirm('Yakin ingin menghapus produk ini?')) {
                 const form = document.getElementById('delete-form');
-                form.action = finalRouteUrl;
-                form.submit();
+                if (form) {
+                    form.action = finalRouteUrl;
+                    form.submit();
+                }
             }
         }
     </script>

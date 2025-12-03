@@ -31,7 +31,6 @@
                 <a href="{{ route('platform.categories.index') }}" class="nav-link active"><i class="fas fa-tags mr-3"></i> Manajemen Kategori</a>
             </nav>
         </aside>
-
         {{-- MAIN CONTENT --}}
         <main class="main-content">
             <div class="flex justify-between items-center mb-8">
@@ -50,18 +49,22 @@
                     <span class="block sm:inline">Terjadi kesalahan input.</span>
                 </div>
             @endif
-
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {{-- KIRI: Tambah Kategori Baru --}}
                 <div class="lg:col-span-1">
                     <div class="bg-white rounded-lg shadow-lg p-6">
                         <h2 class="text-xl font-semibold mb-4 border-b pb-3 text-gray-800">Tambah Kategori Baru</h2>
-                        <form action="{{ route('platform.categories.store') }}" method="POST" class="space-y-4">
+                        <form action="{{ route('platform.categories.store') }}" method="POST" class="space-y-4" enctype="multipart/form-data">
                             @csrf
                             <div>
                                 <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nama Kategori</label>
                                 <input type="text" id="name" name="name" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="Contoh: Elektronik" value="{{ old('name') }}" required>
                                 @error('name') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                            </div>
+                            <div>
+                                <label for="icon" class="block text-sm font-medium text-gray-700 mb-1">Ikon Kategori (PNG/JPG)</label>
+                                <input type="file" id="icon" name="icon" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                                @error('icon') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                             </div>
                             <button type="submit" class="w-full bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition">
                                 <i class="fas fa-plus mr-2"></i> Tambah
@@ -69,7 +72,6 @@
                         </form>
                     </div>
                 </div>
-
                 {{-- KANAN: Daftar Kategori --}}
                 <div class="lg:col-span-2">
                     <div class="bg-white rounded-lg shadow-lg p-6">
@@ -90,7 +92,16 @@
                                                 {{ $categories->firstItem() + $index }}
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                                                {{ $category->name }}
+                                                <div class="flex items-center space-x-3">
+                                                    @if($category->icon_path)
+                                                        <img src="{{ $category->icon_path }}" alt="Icon" class="h-8 w-8 object-cover rounded-full">
+                                                    @else
+                                                        <div class="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+                                                            <i class="fas fa-tag"></i>
+                                                        </div>
+                                                    @endif
+                                                    <span>{{ $category->name }}</span>
+                                                </div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                 <button onclick="openEditModal({{ $category->id }}, '{{ $category->name }}')" class="text-blue-600 hover:text-blue-900 transition mr-3"><i class="fas fa-pencil-alt"></i> Edit</button>
@@ -118,17 +129,20 @@
             </div>
         </main>
     </div>
-
     {{-- MODAL EDIT (Hidden by default) --}}
     <div id="editModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden justify-center items-center z-50">
         <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
             <h2 class="text-xl font-bold mb-4">Edit Kategori</h2>
-            <form id="editForm" method="POST" action="">
+            <form id="editForm" method="POST" action="" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div>
                     <label for="edit_name" class="block text-sm font-medium text-gray-700 mb-1">Nama Kategori</label>
                     <input type="text" id="edit_name" name="name" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" required>
+                </div>
+                <div class="mt-4">
+                    <label for="edit_icon" class="block text-sm font-medium text-gray-700 mb-1">Ganti Ikon (Kosongkan jika tidak diubah)</label>
+                    <input type="file" id="edit_icon" name="icon" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
                 </div>
                 <div class="mt-6 flex justify-end space-x-3">
                     <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">Batal</button>
@@ -137,18 +151,16 @@
             </form>
         </div>
     </div>
-
     <script>
         function confirmDelete(id) {
             if (confirm('Apakah Anda yakin ingin menghapus kategori ini? Tindakan ini tidak dapat dibatalkan.')) {
                 document.getElementById('delete-form-' + id).submit();
             }
         }
-
         const editModal = document.getElementById('editModal');
         const editForm = document.getElementById('editForm');
         const editNameInput = document.getElementById('edit_name');
-
+        
         function openEditModal(id, name) {
             const updateUrl = '{{ route('platform.categories.update', 'REPLACE_ID') }}';
             editForm.action = updateUrl.replace('REPLACE_ID', id);
@@ -156,7 +168,6 @@
             editModal.classList.remove('hidden');
             editModal.classList.add('flex');
         }
-
         function closeEditModal() {
             editModal.classList.add('hidden');
             editModal.classList.remove('flex');

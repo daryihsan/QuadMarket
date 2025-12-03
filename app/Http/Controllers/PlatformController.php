@@ -4,109 +4,217 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Product;
 use Illuminate\Support\Facades\Mail;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 use App\Mail\SellerVerificationMail;
 use App\Mail\SellerRejectionMail;
 
 class PlatformController extends Controller
 {
-    // --- DASHBOARD ---
+    // =======================
+    // 1. DASHBOARD UTAMA
+    // =======================
     public function dashboard()
     {
-        $pending_count = User::where('status_akun', 'pending')->count();
-        $aktif_count = User::where('status_akun', 'active')->count();
+        $pending_count     = User::where('status_akun', 'pending')->count();
+        $aktif_count       = User::where('status_akun', 'active')->count();
         $tidak_aktif_count = User::where('status_akun', 'rejected')->count();
 
-        $data = [
+        return view('platform.dashboard', [
             'pending_verifications_count' => $pending_count,
-            'total_penjual_aktif' => $aktif_count,
-            'total_penjual_tidak_aktif' => $tidak_aktif_count,
-            'total_pengunjung_rating' => 5123,
-        ];
-
-        return view('platform.dashboard', $data);
+            'total_penjual_aktif'         => $aktif_count,
+            'total_penjual_tidak_aktif'   => $tidak_aktif_count,
+            'total_pengunjung_rating'     => 5123,
+        ]);
     }
 
-    // --- LIST VERIFIKASI ---
+    // =======================
+    // 2. LIST VERIFIKASI
+    // =======================
     public function verificationList()
     {
         $pending_sellers = User::where('status_akun', 'pending')
-                                ->orderBy('created_at', 'asc')
-                                ->get();
+            ->orderBy('created_at', 'asc')
+            ->get();
 
         return view('platform.verification_list', compact('pending_sellers'));
     }
 
-    // --- DETAIL VERIFIKASI ---
+    // =======================
+    // 3. DETAIL VERIFIKASI
+    // =======================
     public function verificationDetail($id)
     {
         $seller = User::findOrFail($id);
         return view('platform.verification_detail', compact('seller'));
     }
 
-    // --- PROSES VERIFIKASI (Approve / Reject) ---
+    // =======================
+    // 4. PROSES VERIFIKASI
+    // =======================
     public function processVerification(Request $request, $id)
     {
         $seller = User::findOrFail($id);
 
-        // Validasi Action
         $request->validate([
             'action' => 'required|in:approve,reject'
         ]);
 
-        // Cegah re-verifikasi
         if ($seller->status_akun !== 'pending') {
             return redirect()->route('platform.verifikasi.list')
-                ->with('info', 'Status akun sudah final dan tidak dapat diubah.');
+                ->with('info', 'Status akun sudah final.');
         }
 
-        // Jika DITERIMA
+        // APPROVE
         if ($request->action === 'approve') {
 
             $seller->status_akun = 'active';
             $seller->verification_date = now();
             $seller->save();
 
-            // Kirim EMAIL VERIFIKASI
             Mail::to($seller->email_pic)->send(new SellerVerificationMail(
                 $seller->nama_toko,
                 url('/login/login')
             ));
 
             return redirect()->route('platform.verifikasi.list')
-                ->with('success', "Penjual {$seller->nama_toko} berhasil diaktifkan. Email sudah dikirim.");
+                ->with('success', "Penjual {$seller->nama_toko} berhasil diaktifkan.");
         }
 
-        // Jika DITOLAK
+        // REJECT
         if ($request->action === 'reject') {
 
             $seller->status_akun = 'rejected';
             $seller->verification_date = now();
             $seller->save();
 
-            // Kirim EMAIL PENOLAKAN
             Mail::to($seller->email_pic)->send(new SellerRejectionMail(
                 $seller->nama_toko,
-                $request->alasan // tambahin
+                $request->alasan
             ));
 
             return redirect()->route('platform.verifikasi.list')
-                ->with('error', 'Penjual ditolak. Email penolakan sudah dikirim.');
+                ->with('error', 'Penjual ditolak.');
         }
     }
 
-    // --- HALAMAN LAPORAN ---
-    public function reports()
+    // =======================
+    // 5. HALAMAN LAPORAN – TAB "Daftar Penjual"
+    //    (yang daftar penjual udah aman)
+    // =======================
+    public function sellerReportIndex(Request $request)
     {
-        return view('platform.reports');
-    }
+        // status = semua | aktif | tidak_aktif
+        $statusFilter = $request->query('status', 'semua');
 
-    // --- DOWNLOAD LAPORAN ---
-    public function downloadReport($type)
-    {
-        return response()->json([
-            'message' => 'Simulasi download PDF (implementasikan dengan library dompdf).'
+        // pakai nama_toko sebagai penanda seller
+        $query = User::whereNotNull('nama_toko');
+
+        if ($statusFilter === 'aktif') {
+            $query->where('status_akun', 'active');
+        } elseif ($statusFilter === 'tidak_aktif') {
+            $query->where('status_akun', 'rejected');
+        }
+
+        $sellers = $query->orderBy('created_at', 'asc')->get();
+
+        return view('platform.laporan', [
+            'sellers'      => $sellers,
+            'statusFilter' => $statusFilter,
         ]);
     }
+
+    // =======================
+// 8. DOWNLOAD PDF LAPORAN (3 jenis)
+// =======================
+public function downloadPlatformReport(Request $request)
+{
+    // type = status | provinsi | produk
+    $type        = $request->query('type', 'status');
+    $generatedAt = now();
+    $processedBy = "Admin QuadMarket";
+
+    // ---------- 8a. STATUS PENJUAL (INI SUDAH JALAN DI KAMU) ----------
+    if ($type === 'status') {
+
+        $statusFilter = $request->query('status', 'semua');
+
+        // AMBIL DARI DB: tabel users, yang punya nama_toko
+        $query = User::whereNotNull('nama_toko');
+
+        if ($statusFilter === 'aktif') {
+            $query->where('status_akun', 'active');
+        } elseif ($statusFilter === 'tidak_aktif') {
+            $query->where('status_akun', 'rejected');
+        }
+
+        $sellers = $query->orderBy('created_at', 'asc')->get();
+
+        $statusLabel = match ($statusFilter) {
+            'aktif'       => 'Aktif',
+            'tidak_aktif' => 'Tidak Aktif',
+            default       => 'Semua Status',
+        };
+
+        // VIEW: resources/views/platform/pdf/laporan_status_penjual.blade.php
+        $pdf = Pdf::loadView('platform.pdf.laporan_status_penjual', [
+            'sellers'      => $sellers,
+            'statusLabel'  => $statusLabel,
+            'generatedAt'  => $generatedAt,
+            'processedBy'  => $processedBy,
+        ])->setPaper('A4', 'portrait');
+
+        return $pdf->download('laporan_status_penjual.pdf');
+    }
+
+    // ---------- 8b. PENJUAL PER PROVINSI ----------
+    if ($type === 'provinsi') {
+
+        // PARAMETER DARI URL (?provinsi=...)
+        $provinsi = $request->query('provinsi', 'Semua');
+
+        // AMBIL DARI DB: sama kayak status, tapi bisa difilter provinsi
+        $query = User::whereNotNull('nama_toko');
+
+        if ($provinsi !== 'Semua') {
+            $query->where('provinsi', $provinsi);
+        }
+
+        $sellers = $query->orderBy('created_at', 'asc')->get();
+
+        // VIEW: resources/views/platform/pdf/laporan_per_provinsi.blade.php
+        $pdf = Pdf::loadView('platform.pdf.laporan_per_provinsi', [
+            'sellers'     => $sellers,
+            'provinsi'    => $provinsi,
+            'generatedAt' => $generatedAt,
+            'processedBy' => $processedBy,
+        ])->setPaper('A4', 'portrait');
+
+        return $pdf->download('laporan_per_provinsi.pdf');
+    }
+
+    // ---------- 8c. PRODUK LENGKAP ----------
+    if ($type === 'produk') {
+
+        // AMBIL DARI DB: tabel products + relasi category & user
+        $products = Product::with(['category', 'user'])
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        // VIEW: resources/views/platform/pdf/laporan_produk_rating.blade.php
+        $pdf = Pdf::loadView('platform.pdf.laporan_produk_rating', [
+            'products'    => $products,
+            'generatedAt' => $generatedAt,
+            'processedBy' => $processedBy,
+        ])->setPaper('A4', 'landscape');
+
+        return $pdf->download('laporan_produk_lengkap.pdf');
+    }
+
+    return redirect()->back()->with('error', 'Tipe laporan tidak valid.');
+}
+
+
 }
