@@ -55,10 +55,11 @@
         </div>
     </header>
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        
         <p class="text-sm text-gray-500 mb-6">
-            Home / {{ $currentCategory ?? 'Semua Kategori' }}
+            <a href="{{ route('home') }}" class="text-blue-600 hover:underline">Home</a>
+            / {{ $currentCategory ?? 'Semua Kategori' }}
         </p>
+
         <div class="flex flex-col lg:flex-row gap-8">
             
             <div class="w-full lg:w-72 bg-white p-6 rounded-lg shadow-lg flex-shrink-0">
@@ -69,16 +70,17 @@
                         <h3 class="font-semibold text-gray-700 mb-3">Kategori</h3>
                         <div class="space-y-2 text-sm text-gray-600">
                             @php
-                                $categories = ['Elektronik', 'Fashion Pria', 'Fashion Wanita', 'Kebutuhan Rumah'];
+                                $categories = \App\Models\Category::all();
                             @endphp
                             @foreach ($categories as $cat)
                                 <label class="flex items-center space-x-2">
-                                    <input type="radio" name="kategori" value="{{ $cat }}" 
-                                        {{ ($filters['kategori'] ?? 'Elektronik') === $cat ? 'checked' : '' }} 
+                                    <input type="radio" name="kategori" value="{{ $cat->id }}"
+                                        {{ ($filters['kategori'] ?? null) == $cat->id ? 'checked' : '' }}
                                         class="form-radio text-blue-600 rounded">
-                                    <span>{{ $cat }}</span>
+                                    <span>{{ $cat->name }}</span>
                                 </label>
                             @endforeach
+
                         </div>
                     </div>
                     <div class="pt-4 border-t border-gray-200">

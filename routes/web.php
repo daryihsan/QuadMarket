@@ -3,7 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\LoginController;
-use  App\Http\Controllers\VerificationController;
+use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\PlatformController;
 use App\Http\Controllers\SellerDashboardController;
 use App\Http\Controllers\SellerController;
@@ -95,7 +95,7 @@ Route::prefix('seller')->name('seller.')->group(function () {
 
 // middleware auth login penjual (harus login baru bisa akses dashboard)
 Route::middleware('auth')->prefix('seller')->name('seller.')->group(function () {
-    Route::get('/dashboard', [SellerController::class, 'dashboard'])->name('dashboard');
+    // Route::get('/dashboard', [SellerController::class, 'dashboard'])->name('dashboard');
 });
 
 // logout
@@ -160,6 +160,9 @@ Route::get('/seller/reports', [ReportController::class, 'index'])
 Route::get('/seller/reports/download', [ReportController::class, 'downloadPdf'])
     ->name('seller.reports.download')
     ->middleware('auth');
+
+Route::get('/kategori/{slug}', [CategoryController::class, 'showProducts'])
+    ->name('catalog.byCategory');
 
 // DRAFT!!!!!
 // Route::get('/home', function () {

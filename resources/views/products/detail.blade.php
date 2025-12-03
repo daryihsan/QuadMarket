@@ -42,8 +42,8 @@
     {{-- BREADCRUMB DINAMIS --}}
     <div class="bg-white px-6 py-3 text-sm text-gray-600 border-b mt-2">
         <div class="max-w-7xl mx-auto">
-            <a href="{{ route('home') }}" class="hover:text-blue-600">Home</a> /
-            <a href="{{ route('katalog', ['kategori' => $categoryName]) }}" class="hover:text-blue-600">{{ $categoryName }}</a> /
+            <a href="{{ route('home') }}" class="text-blue-600 hover:underline">Home</a> /
+            <a href="{{ route('katalog', ['kategori' => $categoryName]) }}" class="text-blue-600 hover:underline">{{ $categoryName }}</a> /
             <span class="text-gray-800">{{ $product->name ?? 'Detail Produk' }}</span>
         </div>
     </div>
