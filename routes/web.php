@@ -101,43 +101,57 @@ Route::middleware('auth')->prefix('seller')->name('seller.')->group(function () 
 // logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// ADMIN--------------------------------------------------------------------------
+// ADMIN --------------------------------------------------------------------------
 // platform
 Route::prefix('platform')->name('platform.')->group(function () {
-    // dashboard
-    Route::get('/dashboard', function () {
-        return view('platform.dashboard');
-    })->name('dashboard');
 
-    // laporan
-    Route::get('/laporan', function () {
-        return view('platform.laporan');
-    })->name('laporan');
+    // DASHBOARD ADMIN
+    Route::get('/dashboard', [PlatformController::class, 'dashboard'])
+        ->name('dashboard');
 
-    // laporan provinsi
+    // VERIFIKASI PENJUAL
+    Route::get('/verifikasi', [PlatformController::class, 'verificationList'])
+        ->name('verifikasi.list');
+
+    Route::get('/verifikasi/{id}', [PlatformController::class, 'verificationDetail'])
+        ->name('verifikasi.detail');
+
+    Route::post('/verifikasi/{id}/process', [PlatformController::class, 'processVerification'])
+        ->name('verifikasi.process');
+
+    // ==============================
+    // LAPORAN
+    // ==============================
+
+    // TAB 1 – "Daftar Penjual"
+    Route::get('/laporan', [PlatformController::class, 'sellerReportIndex'])
+        ->name('laporan');
+
+    // TAB 2 – "Penjual per Provinsi"
     Route::get('/laporan/provinsi', function () {
         return view('platform.provinsi');
     })->name('laporan.provinsi');
 
-    // laporan produk
+    // TAB 3 – "Produk Lengkap"
     Route::get('/laporan/produk', function () {
         return view('platform.produk');
     })->name('laporan.produk');
-    
-    // verifikasi penjual (SRS-MartPlace-02)
-    Route::get('/verifikasi', [PlatformController::class, 'verificationList'])->name('verifikasi.list');
-    Route::get('/verifikasi/{id}', [PlatformController::class, 'verificationDetail'])->name('verifikasi.detail');
-    
-    Route::post('/verifikasi/{id}/process', [PlatformController::class, 'processVerification'])->name('verifikasi.process');
-    
-    // 🆕 MANAJEMEN KATEGORI (CRUD)
+
+    // DOWNLOAD PDF – 3 jenis: status, provinsi, produk
+    Route::get('/laporan/download', [PlatformController::class, 'downloadPlatformReport'])
+        ->name('laporan.download');
+
+    // ==============================
+    // MANAJEMEN KATEGORI (CRUD)
+    // ==============================
     Route::prefix('categories')->name('categories.')->group(function () {
-        Route::get('/', [CategoryController::class, 'index'])->name('index'); // platform.categories.index
+        Route::get('/', [CategoryController::class, 'index'])->name('index');   // platform.categories.index
         Route::post('/', [CategoryController::class, 'store'])->name('store');
         Route::put('/{category}', [CategoryController::class, 'update'])->name('update');
         Route::delete('/{category}', [CategoryController::class, 'destroy'])->name('destroy');
     });
 });
+
 
 Route::get('/seller/reports', [ReportController::class, 'index'])
     ->name('seller.reports.index')

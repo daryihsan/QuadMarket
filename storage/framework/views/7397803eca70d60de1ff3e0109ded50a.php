@@ -18,22 +18,22 @@
 </head>
 <body>
 <div class="flex min-h-screen">
-    {{-- SIDEBAR --}}
+    
     <aside class="sidebar fixed h-full">
         <div class="p-6 border-b mb-4">
             <h3 class="font-bold text-lg text-gray-800">Admin Menu</h3>
         </div>
         <nav class="space-y-2">
-            <a href="{{ route('platform.dashboard') }}" class="nav-link">
+            <a href="<?php echo e(route('platform.dashboard')); ?>" class="nav-link">
                 <i class="fas fa-chart-line mr-3"></i> Dashboard
             </a>
-            <a href="{{ route('platform.verifikasi.list') }}" class="nav-link">
+            <a href="<?php echo e(route('platform.verifikasi.list')); ?>" class="nav-link">
                 <i class="fas fa-check-circle mr-3"></i> Verifikasi Penjual
             </a>
-            <a href="{{ route('platform.laporan') }}" class="nav-link active">
+            <a href="<?php echo e(route('platform.laporan')); ?>" class="nav-link active">
                 <i class="fas fa-file-alt mr-3"></i> Laporan
             </a>
-            <a href="{{ route('platform.categories.index') }}" class="nav-link">
+            <a href="<?php echo e(route('platform.categories.index')); ?>" class="nav-link">
                 <i class="fas fa-tags mr-3"></i> Manajemen Kategori
             </a>
         </nav>
@@ -49,49 +49,49 @@
         </div>
     </aside>
 
-    {{-- MAIN CONTENT --}}
+    
     <main class="main-content">
         <div class="flex justify-between items-center mb-8">
             <div>
                 <h1 class="text-2xl font-bold text-blue-900">Dashboard Laporan</h1>
                 <p class="text-sm text-gray-500 mt-1">Daftar penjual yang terdaftar di QuadMarket.</p>
             </div>
-            <img src="{{ url('assets/images/logo.png') }}" alt="QuadMarket" class="h-20">
+            <img src="<?php echo e(url('assets/images/logo.png')); ?>" alt="QuadMarket" class="h-20">
         </div>
 
         <div class="bg-white rounded-t-lg shadow">
             <div class="flex border-b">
-                <a href="{{ route('platform.laporan') }}"
+                <a href="<?php echo e(route('platform.laporan')); ?>"
                    class="px-6 py-4 text-blue-900 font-semibold border-b-2 border-blue-900 whitespace-nowrap hover:bg-gray-50 transition-colors">
                     Daftar Penjual
                 </a>
-                <a href="{{ route('platform.laporan.provinsi') }}"
+                <a href="<?php echo e(route('platform.laporan.provinsi')); ?>"
                    class="px-6 py-4 text-gray-600 hover:text-gray-800 hover:bg-gray-50 transition-colors whitespace-nowrap">
                     Penjual per Provinsi
                 </a>
-                <a href="{{ route('platform.laporan.produk') }}"
+                <a href="<?php echo e(route('platform.laporan.produk')); ?>"
                    class="px-6 py-4 text-gray-600 hover:text-gray-800 hover:bg-gray-50 transition-colors whitespace-nowrap">
                     Produk Lengkap
                 </a>
             </div>
         </div>
 
-        {{-- FILTER + BUTTON --}}
+        
         <div class="bg-white shadow px-6 py-4">
             <div class="flex justify-between items-start flex-wrap gap-4">
-                <form method="GET" action="{{ route('platform.laporan') }}"
+                <form method="GET" action="<?php echo e(route('platform.laporan')); ?>"
                       class="flex items-start space-x-3 flex-wrap gap-3">
                     <label class="text-gray-700 whitespace-nowrap pt-2">Filter berdasarkan status :</label>
                     <select name="status"
                             class="border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[160px]">
-                        <option value="semua" {{ $statusFilter === 'semua' ? 'selected' : '' }}>Semua Status</option>
-                        <option value="aktif" {{ $statusFilter === 'aktif' ? 'selected' : '' }}>Aktif</option>
-                        <option value="tidak_aktif" {{ $statusFilter === 'tidak_aktif' ? 'selected' : '' }}>Tidak Aktif</option>
+                        <option value="semua" <?php echo e($statusFilter === 'semua' ? 'selected' : ''); ?>>Semua Status</option>
+                        <option value="aktif" <?php echo e($statusFilter === 'aktif' ? 'selected' : ''); ?>>Aktif</option>
+                        <option value="tidak_aktif" <?php echo e($statusFilter === 'tidak_aktif' ? 'selected' : ''); ?>>Tidak Aktif</option>
                     </select>
                 </form>
 
-                {{-- TOMBOL DOWNLOAD PDF --}}
-                <a href="{{ route('platform.laporan.download', ['type' => 'status', 'status' => $statusFilter]) }}"
+                
+                <a href="<?php echo e(route('platform.laporan.download', ['type' => 'status', 'status' => $statusFilter])); ?>"
                    class="flex items-center space-x-2 bg-blue-500 text-white px-5 py-2 rounded hover:bg-blue-600 transition">
                     <i class="fas fa-download text-white"></i>
                     <span>Unduh PDF</span>
@@ -99,7 +99,7 @@
             </div>
         </div>
 
-        {{-- TABEL DAFTAR PENJUAL (DINAMIS DARI DB) --}}
+        
         <div class="bg-white shadow rounded-b-lg overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full">
@@ -113,44 +113,47 @@
                     </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
-                    @forelse($sellers as $seller)
+                    <?php $__empty_1 = true; $__currentLoopData = $sellers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $seller): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                         <tr class="hover:bg-gray-50 transition-colors">
-                            <td class="px-6 py-4 text-gray-800 font-medium">{{ $seller->nama_toko }}</td>
+                            <td class="px-6 py-4 text-gray-800 font-medium"><?php echo e($seller->nama_toko); ?></td>
                             <td class="px-6 py-4 text-gray-600">
-                                ID-Penjual-{{ str_pad($seller->id, 3, '0', STR_PAD_LEFT) }}
+                                ID-Penjual-<?php echo e(str_pad($seller->id, 3, '0', STR_PAD_LEFT)); ?>
+
                             </td>
-                            <td class="px-6 py-4 text-gray-600">{{ $seller->email_pic ?? $seller->email }}</td>
+                            <td class="px-6 py-4 text-gray-600"><?php echo e($seller->email_pic ?? $seller->email); ?></td>
                             <td class="px-6 py-4">
-                                @php
+                                <?php
                                     $isActive = $seller->status_akun === 'active';
-                                @endphp
+                                ?>
                                 <span class="px-3 py-1 text-xs font-medium rounded-full whitespace-nowrap inline-block
-                                    {{ $isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
-                                    {{ $isActive ? 'Aktif' : 'Tidak Aktif' }}
+                                    <?php echo e($isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'); ?>">
+                                    <?php echo e($isActive ? 'Aktif' : 'Tidak Aktif'); ?>
+
                                 </span>
                             </td>
                             <td class="px-6 py-4 text-gray-600">
-                                {{ optional($seller->created_at)->format('d M Y') }}
+                                <?php echo e(optional($seller->created_at)->format('d M Y')); ?>
+
                             </td>
                         </tr>
-                    @empty
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                         <tr>
                             <td colspan="5" class="px-6 py-4 text-center text-gray-500">
                                 Belum ada penjual yang terdaftar.
                             </td>
                         </tr>
-                    @endforelse
+                    <?php endif; ?>
                     </tbody>
                 </table>
             </div>
 
             <div class="bg-white px-6 py-4 border-t flex items-center justify-between flex-wrap gap-4">
                 <div class="text-sm text-gray-600">
-                    Menampilkan <span class="font-semibold">{{ $sellers->count() }}</span> penjual
+                    Menampilkan <span class="font-semibold"><?php echo e($sellers->count()); ?></span> penjual
                 </div>
             </div>
         </div>
     </main>
 </div>
 </body>
-</html>
+</html><?php /**PATH /Applications/XAMPP/xamppfiles/htdocs/QuadMarketPPL/resources/views/platform/laporan.blade.php ENDPATH**/ ?>

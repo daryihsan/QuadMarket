@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Status Penjual</title>
+    <title>Laporan Penjual per Provinsi</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -18,6 +18,7 @@
 </head>
 <body>
 <div class="flex min-h-screen">
+
     {{-- SIDEBAR --}}
     <aside class="sidebar fixed h-full">
         <div class="p-6 border-b mb-4">
@@ -30,7 +31,7 @@
             <a href="{{ route('platform.verifikasi.list') }}" class="nav-link">
                 <i class="fas fa-check-circle mr-3"></i> Verifikasi Penjual
             </a>
-            <a href="{{ route('platform.laporan') }}" class="nav-link active">
+            <a href="{{ route('platform.laporan') }}" class="nav-link">
                 <i class="fas fa-file-alt mr-3"></i> Laporan
             </a>
             <a href="{{ route('platform.categories.index') }}" class="nav-link">
@@ -54,19 +55,20 @@
         <div class="flex justify-between items-center mb-8">
             <div>
                 <h1 class="text-2xl font-bold text-blue-900">Dashboard Laporan</h1>
-                <p class="text-sm text-gray-500 mt-1">Daftar penjual yang terdaftar di QuadMarket.</p>
+                <p class="text-sm text-gray-500 mt-1">Laporan penjual berdasarkan provinsi.</p>
             </div>
             <img src="{{ url('assets/images/logo.png') }}" alt="QuadMarket" class="h-20">
         </div>
 
+        {{-- TAB --}}
         <div class="bg-white rounded-t-lg shadow">
             <div class="flex border-b">
                 <a href="{{ route('platform.laporan') }}"
-                   class="px-6 py-4 text-blue-900 font-semibold border-b-2 border-blue-900 whitespace-nowrap hover:bg-gray-50 transition-colors">
+                   class="px-6 py-4 text-gray-600 hover:text-gray-800 hover:bg-gray-50 transition-colors whitespace-nowrap">
                     Daftar Penjual
                 </a>
                 <a href="{{ route('platform.laporan.provinsi') }}"
-                   class="px-6 py-4 text-gray-600 hover:text-gray-800 hover:bg-gray-50 transition-colors whitespace-nowrap">
+                   class="px-6 py-4 text-blue-900 font-semibold border-b-2 border-blue-900 whitespace-nowrap hover:bg-gray-50 transition-colors">
                     Penjual per Provinsi
                 </a>
                 <a href="{{ route('platform.laporan.produk') }}"
@@ -79,37 +81,45 @@
         {{-- FILTER + BUTTON --}}
         <div class="bg-white shadow px-6 py-4">
             <div class="flex justify-between items-start flex-wrap gap-4">
-                <form method="GET" action="{{ route('platform.laporan') }}"
+                <form method="GET" action="{{ route('platform.laporan.provinsi') }}"
                       class="flex items-start space-x-3 flex-wrap gap-3">
-                    <label class="text-gray-700 whitespace-nowrap pt-2">Filter berdasarkan status :</label>
-                    <select name="status"
+                    <label class="text-gray-700 whitespace-nowrap pt-2">
+                        Filter berdasarkan Provinsi :
+                    </label>
+                    <select name="provinsi"
                             class="border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 min-w-[160px]">
-                        <option value="semua" {{ $statusFilter === 'semua' ? 'selected' : '' }}>Semua Status</option>
-                        <option value="aktif" {{ $statusFilter === 'aktif' ? 'selected' : '' }}>Aktif</option>
-                        <option value="tidak_aktif" {{ $statusFilter === 'tidak_aktif' ? 'selected' : '' }}>Tidak Aktif</option>
+                        <option value="Semua" {{ $provinsiFilter === 'Semua' ? 'selected' : '' }}>Semua Provinsi</option>
+                        @foreach($provinces as $prov)
+                            <option value="{{ $prov }}" {{ $provinsiFilter === $prov ? 'selected' : '' }}>
+                                {{ $prov }}
+                            </option>
+                        @endforeach
                     </select>
                 </form>
 
                 {{-- TOMBOL DOWNLOAD PDF --}}
-                <a href="{{ route('platform.laporan.download', ['type' => 'status', 'status' => $statusFilter]) }}"
-                   class="flex items-center space-x-2 bg-blue-500 text-white px-5 py-2 rounded hover:bg-blue-600 transition">
+                <a href="{{ route('platform.laporan.download', [
+                        'type'     => 'provinsi',
+                        'provinsi' => $provinsiFilter ?? 'Semua'
+                    ]) }}"
+                    class="flex items-center space-x-2 bg-blue-500 text-white px-5 py-2 rounded hover:bg-blue-600 transition">
                     <i class="fas fa-download text-white"></i>
                     <span>Unduh PDF</span>
                 </a>
             </div>
         </div>
 
-        {{-- TABEL DAFTAR PENJUAL (DINAMIS DARI DB) --}}
+        {{-- TABEL --}}
         <div class="bg-white shadow rounded-b-lg overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full">
                     <thead class="bg-gray-50 border-b">
                     <tr>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 min-w-[180px]">Nama Penjual</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 min-w-[150px]">ID Penjual</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 min-w-[200px]">Email</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 min-w-[120px]">Status</th>
-                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 min-w-[150px]">Tanggal Bergabung</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Nama Penjual</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">ID Penjual</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Provinsi</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Email</th>
+                        <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700">Tanggal Bergabung</th>
                     </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
@@ -119,16 +129,8 @@
                             <td class="px-6 py-4 text-gray-600">
                                 ID-Penjual-{{ str_pad($seller->id, 3, '0', STR_PAD_LEFT) }}
                             </td>
+                            <td class="px-6 py-4 text-gray-600">{{ $seller->provinsi ?? '-' }}</td>
                             <td class="px-6 py-4 text-gray-600">{{ $seller->email_pic ?? $seller->email }}</td>
-                            <td class="px-6 py-4">
-                                @php
-                                    $isActive = $seller->status_akun === 'active';
-                                @endphp
-                                <span class="px-3 py-1 text-xs font-medium rounded-full whitespace-nowrap inline-block
-                                    {{ $isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
-                                    {{ $isActive ? 'Aktif' : 'Tidak Aktif' }}
-                                </span>
-                            </td>
                             <td class="px-6 py-4 text-gray-600">
                                 {{ optional($seller->created_at)->format('d M Y') }}
                             </td>
@@ -136,7 +138,7 @@
                     @empty
                         <tr>
                             <td colspan="5" class="px-6 py-4 text-center text-gray-500">
-                                Belum ada penjual yang terdaftar.
+                                Tidak ada data penjual.
                             </td>
                         </tr>
                     @endforelse
