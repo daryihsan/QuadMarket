@@ -31,7 +31,6 @@
                 <a href="<?php echo e(route('platform.categories.index')); ?>" class="nav-link active"><i class="fas fa-tags mr-3"></i> Manajemen Kategori</a>
             </nav>
         </aside>
-
         
         <main class="main-content">
             <div class="flex justify-between items-center mb-8">
@@ -50,18 +49,29 @@
                     <span class="block sm:inline">Terjadi kesalahan input.</span>
                 </div>
             <?php endif; ?>
-
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 
                 <div class="lg:col-span-1">
                     <div class="bg-white rounded-lg shadow-lg p-6">
                         <h2 class="text-xl font-semibold mb-4 border-b pb-3 text-gray-800">Tambah Kategori Baru</h2>
-                        <form action="<?php echo e(route('platform.categories.store')); ?>" method="POST" class="space-y-4">
+                        <form action="<?php echo e(route('platform.categories.store')); ?>" method="POST" class="space-y-4" enctype="multipart/form-data">
                             <?php echo csrf_field(); ?>
                             <div>
                                 <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nama Kategori</label>
                                 <input type="text" id="name" name="name" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="Contoh: Elektronik" value="<?php echo e(old('name')); ?>" required>
                                 <?php $__errorArgs = ['name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <p class="text-red-500 text-xs mt-1"><?php echo e($message); ?></p> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                            </div>
+                            <div>
+                                <label for="icon" class="block text-sm font-medium text-gray-700 mb-1">Ikon Kategori (PNG/JPG)</label>
+                                <input type="file" id="icon" name="icon" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                                <?php $__errorArgs = ['icon'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
 if (isset($message)) { $__messageOriginal = $message; }
@@ -76,7 +86,6 @@ unset($__errorArgs, $__bag); ?>
                         </form>
                     </div>
                 </div>
-
                 
                 <div class="lg:col-span-2">
                     <div class="bg-white rounded-lg shadow-lg p-6">
@@ -98,8 +107,16 @@ unset($__errorArgs, $__bag); ?>
 
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                                                <?php echo e($category->name); ?>
-
+                                                <div class="flex items-center space-x-3">
+                                                    <?php if($category->icon_path): ?>
+                                                        <img src="<?php echo e($category->icon_path); ?>" alt="Icon" class="h-8 w-8 object-cover rounded-full">
+                                                    <?php else: ?>
+                                                        <div class="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500">
+                                                            <i class="fas fa-tag"></i>
+                                                        </div>
+                                                    <?php endif; ?>
+                                                    <span><?php echo e($category->name); ?></span>
+                                                </div>
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                 <button onclick="openEditModal(<?php echo e($category->id); ?>, '<?php echo e($category->name); ?>')" class="text-blue-600 hover:text-blue-900 transition mr-3"><i class="fas fa-pencil-alt"></i> Edit</button>
@@ -128,17 +145,20 @@ unset($__errorArgs, $__bag); ?>
             </div>
         </main>
     </div>
-
     
     <div id="editModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden justify-center items-center z-50">
         <div class="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
             <h2 class="text-xl font-bold mb-4">Edit Kategori</h2>
-            <form id="editForm" method="POST" action="">
+            <form id="editForm" method="POST" action="" enctype="multipart/form-data">
                 <?php echo csrf_field(); ?>
                 <?php echo method_field('PUT'); ?>
                 <div>
                     <label for="edit_name" class="block text-sm font-medium text-gray-700 mb-1">Nama Kategori</label>
                     <input type="text" id="edit_name" name="name" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" required>
+                </div>
+                <div class="mt-4">
+                    <label for="edit_icon" class="block text-sm font-medium text-gray-700 mb-1">Ganti Ikon (Kosongkan jika tidak diubah)</label>
+                    <input type="file" id="edit_icon" name="icon" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
                 </div>
                 <div class="mt-6 flex justify-end space-x-3">
                     <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300">Batal</button>
@@ -147,18 +167,16 @@ unset($__errorArgs, $__bag); ?>
             </form>
         </div>
     </div>
-
     <script>
         function confirmDelete(id) {
             if (confirm('Apakah Anda yakin ingin menghapus kategori ini? Tindakan ini tidak dapat dibatalkan.')) {
                 document.getElementById('delete-form-' + id).submit();
             }
         }
-
         const editModal = document.getElementById('editModal');
         const editForm = document.getElementById('editForm');
         const editNameInput = document.getElementById('edit_name');
-
+        
         function openEditModal(id, name) {
             const updateUrl = '<?php echo e(route('platform.categories.update', 'REPLACE_ID')); ?>';
             editForm.action = updateUrl.replace('REPLACE_ID', id);
@@ -166,7 +184,6 @@ unset($__errorArgs, $__bag); ?>
             editModal.classList.remove('hidden');
             editModal.classList.add('flex');
         }
-
         function closeEditModal() {
             editModal.classList.add('hidden');
             editModal.classList.remove('flex');
