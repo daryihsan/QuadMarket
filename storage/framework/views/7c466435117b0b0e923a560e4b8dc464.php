@@ -192,4 +192,4 @@
         </div>
     </footer>
 </body>
-</html><?php /**PATH C:\xampp\htdocs\PPL QUADMARKET\QuadMarket\resources\views/katalog.blade.php ENDPATH**/ ?>
+</html><?php /**PATH /Applications/XAMPP/xamppfiles/htdocs/QuadMarketPPL/resources/views/katalog.blade.php ENDPATH**/ ?>

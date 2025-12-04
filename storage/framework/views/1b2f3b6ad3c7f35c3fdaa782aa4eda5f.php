@@ -10,4 +10,4 @@
     <?php echo $__env->yieldContent('content'); ?>
 </body>
 </html>
-<?php /**PATH C:\laragon\www\QuadMarket\resources\views/layouts/app.blade.php ENDPATH**/ ?>
+<?php /**PATH /Applications/XAMPP/xamppfiles/htdocs/QuadMarketPPL/resources/views/layouts/app.blade.php ENDPATH**/ ?>
